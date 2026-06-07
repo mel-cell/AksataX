@@ -1,7 +1,9 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { useCategories } from "@/hooks/use-categories";
 import type { Category } from "@/types/category";
+import Link from "next/link";
 
 function CategoryCard({ category }: { category: Category }) {
   return (
@@ -42,9 +44,16 @@ export default function Home() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-16">
-      <h1 className="mb-8 text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
-        Categories
-      </h1>
+      <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+          Categories
+        </h1>
+
+        <Button asChild>
+          <Link href="/id/member/postingan">Lihat Postingan</Link>
+        </Button>
+      </div>
+
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {categories?.map((category) => (
           <CategoryCard key={category.id} category={category} />
