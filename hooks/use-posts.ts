@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { postService } from "@/app/services/post-service";
+import { postService } from "@/lib/services/post-service";
 
 export function usePosts() {
   return useQuery({

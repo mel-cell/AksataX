@@ -1,6 +1,6 @@
 "use client";
 
-import { postService } from "@/app/services/post-service";
+import { postService } from "@/lib/services/post-service";
 import { useMutation } from "@tanstack/react-query";
 
 

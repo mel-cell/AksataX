@@ -1,11 +1,11 @@
 "use client";
 
-import PostCard from "@/app/components/post-card";
+import PostCard from "@/components/posts/post-card";
 import { Button } from "@/components/ui/button";
 import { usePosts } from "@/hooks/use-posts";
 import Link from "next/link";
 
-export default function HomePage() {
+export default function PostsPage() {
   const { data: posts, isLoading, isError } = usePosts();
 
   if (isLoading) {
@@ -20,7 +20,7 @@ export default function HomePage() {
     <div className="max-w-5xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6">Forum Diskusi</h1>
       <Link
-        href="/id/member/inputpostingan"
+        href="/id/posts/create"
         className="inline-block mb-6 bg-blue-600 text-white px-4 py-2 rounded-lg"
       >
         + Buat Postingan
@@ -32,7 +32,7 @@ export default function HomePage() {
             <PostCard post={post} />
 
             <Button asChild className="mt-2">
-              <Link href={`/id/member/postingan/${post.id}`}>Lihat Detail</Link>
+              <Link href={`/id/posts/${post.id}`}>Lihat Detail</Link>
             </Button>
           </div>
         ))}

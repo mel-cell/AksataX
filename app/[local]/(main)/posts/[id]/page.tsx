@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { usePostDetail } from "@/hooks/use-post-detail";
 
-export default function DetailPostPage() {
+export default function PostDetailPage() {
   const params = useParams();
 
   const id = params.id as string;

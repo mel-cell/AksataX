@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useCreatePost } from "@/hooks/use-create-post";
 
-export default function InputPostinganPage() {
+export default function CreatePostPage() {
   const createPost = useCreatePost();
 
   const [title, setTitle] = useState("");

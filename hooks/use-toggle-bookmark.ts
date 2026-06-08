@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
-import { postService } from "@/app/services/post-service";
+import { postService } from "@/lib/services/post-service";
 
 export function useToggleBookmark() {
   return useMutation({

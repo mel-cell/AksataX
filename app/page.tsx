@@ -50,7 +50,7 @@ export default function Home() {
         </h1>
 
         <Button asChild>
-          <Link href="/id/member/postingan">Lihat Postingan</Link>
+          <Link href="/id/posts">Lihat Postingan</Link>
         </Button>
       </div>
 
