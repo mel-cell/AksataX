@@ -1,0 +1,10 @@
+[
+  { "id": "tag-1", "name": "javascript", "slug": "javascript", "color": "#F7DF1E", "posts_count": 8 },
+  { "id": "tag-2", "name": "react", "slug": "react", "color": "#61DAFB", "posts_count": 6 },
+  { "id": "tag-3", "name": "nextjs", "slug": "nextjs", "color": "#000000", "posts_count": 5 },
+  { "id": "tag-4", "name": "tailwind", "slug": "tailwind", "color": "#06B6D4", "posts_count": 4 },
+  { "id": "tag-5", "name": "python", "slug": "python", "color": "#3776AB", "posts_count": 3 },
+  { "id": "tag-6", "name": "ui-ux", "slug": "ui-ux", "color": "#FF6B6B", "posts_count": 5 },
+  { "id": "tag-7", "name": "backend", "slug": "backend", "color": "#6B5B95", "posts_count": 4 },
+  { "id": "tag-8", "name": "database", "slug": "database", "color": "#336791", "posts_count": 3 }
+]

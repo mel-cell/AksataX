@@ -21,7 +21,7 @@ export default function PostsPage() {
       <h1 className="text-2xl font-bold mb-6">Forum Diskusi</h1>
       <Link
         href="/posts/create"
-        className="inline-block mb-6 bg-blue-600 text-white px-4 py-2 rounded-lg"
+          className="inline-block mb-6 border border-border bg-card hover:bg-sidebar-accent text-sidebar-foreground px-4 py-2 rounded-lg text-sm font-medium transition-colors"
       >
         + Buat Postingan
       </Link>

@@ -8,7 +8,7 @@ export default function ModeratorLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-[#0d1117] text-[#f9fafb]">
+    <div className="min-h-screen bg-background text-foreground">
       <Navbar />
       <div className="flex pt-14">
         <Sidebar />

@@ -1,0 +1,7 @@
+[
+  { "id": "notif-1", "type": "like", "message": "tegar_ji menyukai postingan Anda", "user_id": "user-5", "post_id": "post-1", "read": false, "created_at": "2026-06-09T10:00:00Z" },
+  { "id": "notif-2", "type": "comment", "message": "rindiani_ berkomentar di postingan Anda", "user_id": "user-2", "post_id": "post-2", "read": false, "created_at": "2026-06-09T09:30:00Z" },
+  { "id": "notif-3", "type": "follow", "message": "bunga_putri mulai mengikuti Anda", "user_id": "user-3", "post_id": null, "read": true, "created_at": "2026-06-08T14:00:00Z" },
+  { "id": "notif-4", "type": "system", "message": "Postingan Anda mencapai 100 dilihat", "user_id": null, "post_id": "post-1", "read": true, "created_at": "2026-06-07T12:00:00Z" },
+  { "id": "notif-5", "type": "like", "message": "sekawan_dev menyukai postingan Anda", "user_id": "user-4", "post_id": "post-3", "read": false, "created_at": "2026-06-09T08:00:00Z" }
+]

@@ -22,7 +22,7 @@ export default function PostDetailPage() {
     <div className="max-w-5xl mx-auto p-6">
       <h1 className="text-3xl font-bold">{post.title}</h1>
 
-      <div className="mt-3 text-sm text-gray-500 flex gap-4">
+      <div className="mt-3 text-sm text-muted-foreground flex gap-4">
         <span>{post.user.username}</span>
         <span>{post.category.name}</span>
       </div>
@@ -35,8 +35,8 @@ export default function PostDetailPage() {
         </h2>
 
         {post.comments.map((comment) => (
-          <div key={comment.id} className="border rounded-lg p-4 mb-3">
-            <div className="font-semibold">{comment.user.username}</div>
+          <div key={comment.id} className="border border-border bg-card rounded-lg p-4 mb-3">
+            <div className="font-semibold text-card-foreground">{comment.user.username}</div>
 
             <div className="mt-2">{comment.body}</div>
           </div>

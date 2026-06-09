@@ -57,7 +57,7 @@ export default function CreatePostPage() {
           placeholder="Category ID"
           value={categoryId}
           onChange={(e) => setCategoryId(e.target.value)}
-          className="w-full border rounded-lg p-3"
+          className="w-full border border-border bg-card text-card-foreground rounded-lg p-3"
         />
 
         <input
@@ -65,7 +65,7 @@ export default function CreatePostPage() {
           placeholder="Judul Postingan"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full border rounded-lg p-3"
+          className="w-full border border-border bg-card text-card-foreground rounded-lg p-3"
         />
 
         <textarea
@@ -73,7 +73,7 @@ export default function CreatePostPage() {
           value={body}
           onChange={(e) => setBody(e.target.value)}
           rows={8}
-          className="w-full border rounded-lg p-3"
+          className="w-full border border-border bg-card text-card-foreground rounded-lg p-3"
         />
 
         <input
@@ -81,13 +81,13 @@ export default function CreatePostPage() {
           placeholder="Tag ID pisahkan dengan koma"
           value={tags}
           onChange={(e) => setTags(e.target.value)}
-          className="w-full border rounded-lg p-3"
+          className="w-full border border-border bg-card text-card-foreground rounded-lg p-3"
         />
 
         <button
           type="submit"
           disabled={createPost.isPending}
-          className="bg-blue-600 text-white px-5 py-2 rounded-lg"
+          className="border border-border bg-card hover:bg-sidebar-accent text-sidebar-foreground px-5 py-2 rounded-lg font-medium transition-colors"
         >
           {createPost.isPending ? "Menyimpan..." : "Publikasikan"}
         </button>

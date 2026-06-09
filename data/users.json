@@ -1,0 +1,62 @@
+[
+  {
+    "id": "user-1",
+    "username": "kingnasir17",
+    "avatar_url": "",
+    "bio": "Full-stack developer | Open source enthusiast",
+    "reputation_points": 1250,
+    "created_at": "2024-01-15T08:00:00Z",
+    "roles": [{ "id": "role-1", "name": "user" }],
+    "followers_count": 42,
+    "following_count": 18,
+    "posts_count": 7
+  },
+  {
+    "id": "user-2",
+    "username": "rindiani_",
+    "avatar_url": "",
+    "bio": "UI/UX Designer | Crafting digital experiences",
+    "reputation_points": 890,
+    "created_at": "2024-02-20T10:30:00Z",
+    "roles": [{ "id": "role-1", "name": "user" }],
+    "followers_count": 28,
+    "following_count": 35,
+    "posts_count": 4
+  },
+  {
+    "id": "user-3",
+    "username": "bunga_putri",
+    "avatar_url": "",
+    "bio": "Mahasiswa | Tech & Lifestyle blogger",
+    "reputation_points": 640,
+    "created_at": "2024-03-10T14:00:00Z",
+    "roles": [{ "id": "role-1", "name": "user" }],
+    "followers_count": 15,
+    "following_count": 22,
+    "posts_count": 5
+  },
+  {
+    "id": "user-4",
+    "username": "sekawan_dev",
+    "avatar_url": "",
+    "bio": "Sekawan Dev Team — building awesome things",
+    "reputation_points": 3200,
+    "created_at": "2023-11-01T07:00:00Z",
+    "roles": [{ "id": "role-2", "name": "admin" }],
+    "followers_count": 120,
+    "following_count": 45,
+    "posts_count": 23
+  },
+  {
+    "id": "user-5",
+    "username": "tegar_aji",
+    "avatar_url": "",
+    "bio": "Backend engineer | PHP, Go, Rust",
+    "reputation_points": 2100,
+    "created_at": "2024-01-05T09:00:00Z",
+    "roles": [{ "id": "role-1", "name": "user" }],
+    "followers_count": 67,
+    "following_count": 30,
+    "posts_count": 12
+  }
+]

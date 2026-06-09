@@ -8,12 +8,12 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-[#0d1117] text-[#f9fafb]">
+    <div className="min-h-screen bg-background text-foreground">
       <Navbar />
       <div className="flex pt-14">
         <Sidebar />
         <main className="flex-1 ml-0 md:ml-56 pb-16 md:pb-0 min-h-[calc(100vh-56px)]">
-          <div className="max-w-5xl mx-auto">{children}</div>
+          <div className="max-w-7xl mx-auto">{children}</div>
         </main>
       </div>
       <BottomNav />

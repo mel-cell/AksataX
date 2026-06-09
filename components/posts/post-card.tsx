@@ -71,49 +71,45 @@ export default function PostCard({ post }: Props) {
 
   return (
     <Link href={`/posts/${post.id}`}>
-      <div className="border rounded-xl p-4 hover:shadow-md transition cursor-pointer">
-        <h2 className="font-bold text-lg">{post.title}</h2>
+      <div className="border border-border bg-card rounded-lg p-4 hover:shadow-sm transition cursor-pointer">
+        <h2 className="font-semibold text-card-foreground">{post.title}</h2>
 
-        <p className="text-gray-500 mt-2 line-clamp-2">{post.body}</p>
+        <p className="text-muted-foreground mt-1.5 text-sm line-clamp-2">{post.body}</p>
 
-        <div className="flex gap-4 mt-4 text-sm text-gray-400">
-          <span>👤 {post.user.username}</span>
-
-          <span>📂 {post.category.name}</span>
-
-          <span>💬 {post.comments_count}</span>
-
-          <span>👁️ {post.view_count}</span>
+        <div className="flex items-center gap-3 mt-3 text-xs text-muted-foreground">
+          <span>{post.user.username}</span>
+          <span className="text-border">|</span>
+          <span>{post.category.name}</span>
+          <span className="text-border">|</span>
+          <span>{post.comments_count} komentar</span>
+          <span>{post.view_count} dilihat</span>
         </div>
 
-        {/* Action Bar */}
-        <div className="mt-4 flex gap-3">
-          {/* LIKE */}
+        <div className="mt-3 flex gap-2">
           <button
             type="button"
             onClick={handleLike}
             disabled={toggleLike.isPending}
-            className={`px-3 py-1 rounded-md border transition ${
+            className={`px-3 py-1 rounded-lg border transition text-xs font-medium ${
               liked
                 ? "bg-red-500 text-white border-red-500"
-                : "bg-white text-gray-700 border-gray-300"
+                : "bg-card text-muted-foreground border-border hover:bg-sidebar-accent"
             }`}
           >
-            {liked ? "❤️ Disukai" : "🤍 Suka"}
+            {liked ? "Disukai" : "Suka"}
           </button>
 
-          {/* BOOKMARK */}
           <button
             type="button"
             onClick={handleBookmark}
             disabled={toggleBookmark.isPending}
-            className={`px-3 py-1 rounded-md border transition ${
+            className={`px-3 py-1 rounded-lg border transition text-xs font-medium ${
               bookmarked
-                ? "bg-blue-500 text-white border-blue-500"
-                : "bg-white text-gray-700 border-gray-300"
+                ? "bg-sidebar-accent text-sidebar-foreground border-border"
+                : "bg-card text-muted-foreground border-border hover:bg-sidebar-accent"
             }`}
           >
-            {bookmarked ? "🔖 Tersimpan" : "📑 Simpan"}
+            {bookmarked ? "Tersimpan" : "Simpan"}
           </button>
         </div>
       </div>

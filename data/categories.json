@@ -1,0 +1,52 @@
+[
+  {
+    "id": "cat-1",
+    "name": "Pemrograman",
+    "slug": "pemrograman",
+    "description": "Diskusi seputar bahasa pemrograman dan pengembangan perangkat lunak",
+    "parent_id": null,
+    "created_at": "2024-01-01T00:00:00Z",
+    "children": [],
+    "posts_count": 15
+  },
+  {
+    "id": "cat-2",
+    "name": "Desain",
+    "slug": "desain",
+    "description": "UI/UX, graphic design, dan visual kreatif",
+    "parent_id": null,
+    "created_at": "2024-01-01T00:00:00Z",
+    "children": [],
+    "posts_count": 8
+  },
+  {
+    "id": "cat-3",
+    "name": "Teknologi",
+    "slug": "teknologi",
+    "description": "Berita dan diskusi tentang teknologi terbaru",
+    "parent_id": null,
+    "created_at": "2024-01-01T00:00:00Z",
+    "children": [],
+    "posts_count": 20
+  },
+  {
+    "id": "cat-4",
+    "name": "Karir",
+    "slug": "karir",
+    "description": "Tips karir, lowongan kerja, dan pengembangan diri",
+    "parent_id": null,
+    "created_at": "2024-01-01T00:00:00Z",
+    "children": [],
+    "posts_count": 6
+  },
+  {
+    "id": "cat-5",
+    "name": "Open Source",
+    "slug": "open-source",
+    "description": "Kontribusi open source dan kolaborasi proyek",
+    "parent_id": null,
+    "created_at": "2024-01-01T00:00:00Z",
+    "children": [],
+    "posts_count": 12
+  }
+]
