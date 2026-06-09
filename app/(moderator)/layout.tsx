@@ -1,5 +1,5 @@
-import { Navbar } from "@/components/layout/navbar";
-import { Sidebar } from "@/components/layout/sidebar";
+import Navbar from "@/components/layout/navbar";
+import Sidebar from "@/components/layout/sidebar";
 import { ModeratorNav } from "@/components/layout/moderator-nav";
 
 export default function ModeratorLayout({
@@ -8,11 +8,11 @@ export default function ModeratorLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen bg-[#0d1117] text-[#f9fafb]">
       <Navbar />
-      <div className="flex flex-1">
+      <div className="flex pt-14">
         <Sidebar />
-        <div className="flex flex-1 flex-col">
+        <div className="flex flex-1 flex-col ml-0 md:ml-56">
           <ModeratorNav />
           <main className="flex-1">{children}</main>
         </div>

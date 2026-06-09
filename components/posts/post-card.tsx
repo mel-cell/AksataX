@@ -70,7 +70,7 @@ export default function PostCard({ post }: Props) {
   };
 
   return (
-    <Link href={`/id/posts/${post.id}`}>
+    <Link href={`/posts/${post.id}`}>
       <div className="border rounded-xl p-4 hover:shadow-md transition cursor-pointer">
         <h2 className="font-bold text-lg">{post.title}</h2>
 

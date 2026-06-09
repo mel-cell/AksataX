@@ -20,7 +20,7 @@ export default function PostsPage() {
     <div className="max-w-5xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6">Forum Diskusi</h1>
       <Link
-        href="/id/posts/create"
+        href="/posts/create"
         className="inline-block mb-6 bg-blue-600 text-white px-4 py-2 rounded-lg"
       >
         + Buat Postingan
@@ -32,7 +32,7 @@ export default function PostsPage() {
             <PostCard post={post} />
 
             <Button asChild className="mt-2">
-              <Link href={`/id/posts/${post.id}`}>Lihat Detail</Link>
+              <Link href={`/posts/${post.id}`}>Lihat Detail</Link>
             </Button>
           </div>
         ))}
