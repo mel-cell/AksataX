@@ -1,35 +1,34 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { Providers } from "./providers";
 import "./globals.css";
+import Navbar from "@/components/layout/navbar";
+import Sidebar from "@/components/layout/sidebar";
+import BottomNav from "@/components/layout/bottom-nav";
+import { Inter } from "next/font/google";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Aksatax",
-  description: "Aksatax application",
+  title: "AksataX",
+  description: "AksataX App",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">
-        <Providers>{children}</Providers>
+    <html lang="id" className={inter.className}>
+      <body className="min-h-screen bg-[#0d1117] text-[#f9fafb]">
+        <Navbar />
+
+        <div className="flex pt-14">
+          <Sidebar />
+
+          <main className="flex-1 ml-0 md:ml-56 pb-16 md:pb-0 min-h-[calc(100vh-56px)]">
+            <div className="max-w-5xl mx-auto">
+              {children}
+            </div>
+          </main>
+        </div>
+
+        <BottomNav />
       </body>
     </html>
   );
