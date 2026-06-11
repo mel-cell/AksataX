@@ -32,11 +32,22 @@ function Avatar({ name }: { name: string }) {
 export default function PostCard({ post }: Props) {
   const router = useRouter();
 
-  const { id, title, body, user, category, tags, comments_count, view_count, created_at, is_answered } = post;
+  const {
+    id,
+    title,
+    body,
+    user,
+    category,
+    tags,
+    comments_count,
+    view_count,
+    created_at,
+    is_answered,
+  } = post;
 
   const [bookmarked, setBookmarked] = useState(post.is_bookmarked ?? false);
   const [voteType, setVoteType] = useState<"upvote" | "downvote" | null>(
-    post.user_vote as "upvote" | "downvote" | null
+    post.user_vote as "upvote" | "downvote" | null,
   );
   const [voteScore, setVoteScore] = useState(post.vote_score);
 
@@ -46,19 +57,34 @@ export default function PostCard({ post }: Props) {
   const handleBookmark = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+
+    const previousState = bookmarked;
+
+    // langsung ubah UI
+    setBookmarked(!bookmarked);
+
     try {
       const result = await toggleBookmark.mutateAsync(id);
+
+      // sinkronkan dengan response API
       setBookmarked(result.is_bookmarked);
     } catch {
-      // ignore
+      // kembalikan ke state sebelumnya jika gagal
+      setBookmarked(previousState);
     }
   };
 
-  const handleVote = async (e: React.MouseEvent, type: "upvote" | "downvote") => {
+  const handleVote = async (
+    e: React.MouseEvent,
+    type: "upvote" | "downvote",
+  ) => {
     e.preventDefault();
     e.stopPropagation();
     try {
-      const result = await toggleVote.mutateAsync({ postId: id, voteType: type });
+      const result = await toggleVote.mutateAsync({
+        postId: id,
+        voteType: type,
+      });
       setVoteType(result.vote_type ?? null);
       setVoteScore(result.vote_score);
     } catch {
@@ -74,7 +100,8 @@ export default function PostCard({ post }: Props) {
 
   const authorName = user?.username ?? "anonymous";
   const categoryName = category?.name ?? "";
-  const excerpt = body?.slice(0, 180) + (body && body.length > 180 ? "..." : "");
+  const excerpt =
+    body?.slice(0, 180) + (body && body.length > 180 ? "..." : "");
   const rep = user?.reputation_points ?? 0;
   const lvl = user?.level ?? 1;
 
@@ -97,9 +124,11 @@ export default function PostCard({ post }: Props) {
             </button>
             <span
               className={`text-xs font-semibold tabular-nums ${
-                voteType === "upvote" ? "text-green-600"
-                : voteType === "downvote" ? "text-red-500"
-                : "text-card-foreground"
+                voteType === "upvote"
+                  ? "text-green-600"
+                  : voteType === "downvote"
+                    ? "text-red-500"
+                    : "text-card-foreground"
               }`}
             >
               {voteScore}
@@ -128,23 +157,32 @@ export default function PostCard({ post }: Props) {
                   <Avatar name={authorName} />
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold text-card-foreground">{authorName}</span>
+                      <span className="text-sm font-semibold text-card-foreground">
+                        {authorName}
+                      </span>
                       <span className="text-[11px] px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-600 font-medium leading-none">
                         Lv.{lvl}
                       </span>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-0.5">{rep.toLocaleString("id-ID")} poin</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {rep.toLocaleString("id-ID")} poin
+                    </p>
                   </div>
                 </button>
               </UserHoverCard>
               <span className="text-xs text-muted-foreground shrink-0 pt-0.5">
-                {formatDistanceToNow(new Date(created_at), { addSuffix: true, locale: localeId as any })}
+                {formatDistanceToNow(new Date(created_at), {
+                  addSuffix: true,
+                  locale: localeId as any,
+                })}
               </span>
             </div>
 
             <div className="flex items-center gap-2 flex-wrap mb-2">
               <button
-                onClick={(e) => navigate(e, `/search?category=${category?.slug ?? ""}`)}
+                onClick={(e) =>
+                  navigate(e, `/search?category=${category?.slug ?? ""}`)
+                }
                 className="text-xs px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 transition-colors"
               >
                 {categoryName}
@@ -188,12 +226,21 @@ export default function PostCard({ post }: Props) {
                   onClick={handleBookmark}
                   disabled={toggleBookmark.isPending}
                   className={`flex items-center gap-1 transition-colors ${
-                    bookmarked ? "text-indigo-500" : "text-muted-foreground hover:text-indigo-500"
+                    bookmarked
+                      ? "text-blue-600"
+                      : "text-muted-foreground hover:text-blue-600"
                   }`}
                 >
-                  <Bookmark size={13} fill={bookmarked ? "currentColor" : "none"} />
+                  <Bookmark
+                    size={18}
+                    strokeWidth={2}
+                    fill={bookmarked ? "currentColor" : "none"}
+                  />
                 </button>
-                <Link href={`/posts/${id}`} className="flex items-center gap-1 hover:text-card-foreground transition-colors">
+                <Link
+                  href={`/posts/${id}`}
+                  className="flex items-center gap-1 hover:text-card-foreground transition-colors"
+                >
                   <MessageCircle size={13} />
                   {comments_count}
                 </Link>
