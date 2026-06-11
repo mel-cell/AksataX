@@ -4,10 +4,11 @@ import { Button } from "@/components/ui/button";
 import { useFollowButton } from "@/hooks/use-follow-button";
 
 interface Props {
+  userId: string;
   initialFollowing?: boolean;
 }
 
-export default function FollowButton({ initialFollowing = false }: Props) {
+export default function FollowButton({ userId, initialFollowing = false }: Props) {
   const { isFollowing, isLoading, handleToggleFollow } = useFollowButton(initialFollowing);
 
   return (
@@ -15,10 +16,10 @@ export default function FollowButton({ initialFollowing = false }: Props) {
       variant={isFollowing ? "outline" : "default"}
       size="sm"
       disabled={isLoading}
-      onClick={handleToggleFollow}
+      onClick={() => handleToggleFollow(userId)}
       className={isFollowing ? "hover:border-red-300 hover:text-red-500" : ""}
     >
-      {isLoading ? "Loading..." : isFollowing ? "Mengikuti" : "Ikuti"}
+      {isLoading ? "..." : isFollowing ? "Mengikuti" : "Ikuti"}
     </Button>
   );
 }

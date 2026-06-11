@@ -5,7 +5,8 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { useUser } from "@/hooks/use-auth";
 import type { ApiResponse } from "@/types/api";
-import type { User, Post } from "@/types/post";
+import type { User } from "@/types/user";
+import type { Post } from "@/types/post";
 
 export const TABS = [
   { key: "posts", label: "Postingan" },
@@ -57,8 +58,8 @@ export function useProfilePage(username?: string) {
     queryKey: ["user-followers", profile?.id],
     queryFn: async () => {
       const { data } = await api.get(`/users/${profile?.id}/followers`);
-      const items = (data.data ?? []) as any[];
-      return items.map((item: any) => ({
+      const items = (data.data ?? []) as { follower?: { id: string; username: string; avatar_url: string }; id: string }[];
+      return items.map((item) => ({
         id: item.follower?.id ?? item.id,
         username: item.follower?.username ?? "",
         name: item.follower?.username ?? "",
@@ -73,8 +74,8 @@ export function useProfilePage(username?: string) {
     queryKey: ["user-following", profile?.id],
     queryFn: async () => {
       const { data } = await api.get(`/users/${profile?.id}/following`);
-      const items = (data.data ?? []) as any[];
-      return items.map((item: any) => ({
+      const items = (data.data ?? []) as { following?: { id: string; username: string; avatar_url: string }; id: string }[];
+      return items.map((item) => ({
         id: item.following?.id ?? item.id,
         username: item.following?.username ?? "",
         name: item.following?.username ?? "",
@@ -98,11 +99,13 @@ export function useProfilePage(username?: string) {
       avatar_url: null,
       bio: null,
       reputation_points: 0,
+      level: 1,
       created_at: "",
       roles: [],
       followers_count: 0,
       following_count: 0,
       posts_count: 0,
+      is_following: false,
     },
     activeTab,
     setActiveTab,

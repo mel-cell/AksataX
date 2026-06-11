@@ -2,8 +2,8 @@ import { api } from "@/lib/api";
 import { Post } from "@/types/post";
 
 export const postService = {
-  async getPosts() {
-    const response = await api.get("/posts");
+  async getPosts(params?: { page?: number; per_page?: number; sort?: string }) {
+    const response = await api.get("/posts", { params });
 
     return response.data.data as Post[];
   },
@@ -35,5 +35,14 @@ export const postService = {
     const { data } = await api.post(`/posts/${postId}/bookmark`);
 
     return data.data;
+  },
+
+  async toggleVote(postId: string, voteType: "upvote" | "downvote") {
+    const { data } = await api.post(`/posts/${postId}/vote`, { vote_type: voteType });
+
+    return data.data as {
+      vote_type?: "upvote" | "downvote";
+      vote_score: number;
+    };
   },
 };

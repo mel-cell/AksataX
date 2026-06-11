@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
 import { Home, Search, Bookmark, User, LogIn } from "lucide-react";
 import { getToken } from "@/hooks/use-auth";
 
@@ -17,7 +18,11 @@ const authLinks = [
 
 export default function BottomNav() {
   const pathname = usePathname();
-  const isAuth = !!getToken();
+  const [isAuth, setIsAuth] = useState(false);
+
+  useEffect(() => {
+    setIsAuth(!!getToken());
+  }, []);
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 

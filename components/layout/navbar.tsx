@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Search, Bell } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import UserDropdown from "./UserDropdown";
 import { useUnreadCount } from "@/hooks/use-notifications";
 import { getToken } from "@/hooks/use-auth";
@@ -12,8 +12,12 @@ import Image from "next/image";
 export default function Navbar() {
     const router = useRouter();
     const [searchQuery, setSearchQuery] = useState("");
+    const [isAuth, setIsAuth] = useState(false);
     const { data: unread } = useUnreadCount();
-    const isAuth = !!getToken();
+
+    useEffect(() => {
+        setIsAuth(!!getToken());
+    }, []);
 
     const handleSearchSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -78,7 +82,7 @@ export default function Navbar() {
                     >
                         Masuk
                     </Link>
-                    <span className="h-6 w-px bg-[#44403C]"></span>
+                    <span className="h-6 w-px bg-sidebar-border"></span>
                     <Link
                         href="/register"
                         className="rounded-sm bg-[#1C1917] px-4 py-1.5 text-sm font-medium text-[#FAFAF9] transition hover:bg-[#292524]"

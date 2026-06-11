@@ -3,8 +3,9 @@
 import { CheckCheck, Trash2, Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import { formatDistanceToNow } from "date-fns";
-import { id } from "date-fns/locale";
+import { id } from "date-fns/locale/id";
 import { getToken } from "@/hooks/use-auth";
 import {
     useNotifications,
@@ -27,12 +28,17 @@ function notificationLabel(type: string) {
 }
 
 export default function NotificationsPage() {
+    const [isAuth, setIsAuth] = useState(false);
     const { data: notifications, isLoading, error } = useNotifications();
     const { data: unread } = useUnreadCount();
     const markRead = useMarkRead();
     const markAllRead = useMarkAllRead();
     const deleteNotif = useDeleteNotification();
     const deleteAll = useDeleteAllNotifications();
+
+    useEffect(() => {
+        setIsAuth(!!getToken());
+    }, []);
 
     return (
         <div className="mx-auto max-w-7xl p-6">
@@ -81,7 +87,7 @@ export default function NotificationsPage() {
                 </div>
             )}
 
-            {!getToken() && (
+            {!isAuth && (
                 <div className="flex flex-col items-center justify-center py-20">
                     <div className="relative mb-6">
                         <Image
@@ -107,7 +113,7 @@ export default function NotificationsPage() {
                 </div>
             )}
 
-            {getToken() && notifications && notifications.length === 0 && (
+            {isAuth && notifications && notifications.length === 0 && (
                 <div className="flex flex-col items-center justify-center py-20">
                     <div className="relative mb-6">
                         <Image

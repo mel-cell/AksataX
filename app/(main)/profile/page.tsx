@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import PostCard from "@/components/posts/post-card";
+import PostCard from "@/components/posts/PostCard";
 import FollowButton from "@/components/ui/FollowButton";
 import { useProfilePage, TABS, TabKey } from "@/hooks/use-profile-page";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,7 @@ function UserListItem({ user }: {
           <p className="text-xs text-muted-foreground">@{user.username}</p>
         </div>
       </div>
-      <FollowButton initialFollowing={user.isFollowing} />
+      <FollowButton userId={user.id} initialFollowing={user.isFollowing} />
     </div>
   );
 }
@@ -52,7 +52,7 @@ export default function ProfilePage() {
                 Edit Profil
               </Button>
             ) : (
-              <FollowButton initialFollowing={false} />
+              <FollowButton userId={profile.id} initialFollowing={false} />
             )}
           </div>
 

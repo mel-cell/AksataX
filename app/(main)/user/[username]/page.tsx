@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import PostCard from "@/components/posts/post-card";
+import PostCard from "@/components/posts/PostCard";
 import FollowButton from "@/components/ui/FollowButton";
 import { useProfilePage, TABS, TabKey } from "@/hooks/use-profile-page";
 import { Button } from "@/components/ui/button";
@@ -23,7 +23,7 @@ function UserListItem({ user }: {
           <p className="text-xs text-muted-foreground">@{user.username}</p>
         </div>
       </div>
-      <FollowButton initialFollowing={user.isFollowing} />
+      <FollowButton userId={user.id} initialFollowing={user.isFollowing} />
     </div>
   );
 }
@@ -71,13 +71,22 @@ export default function UserProfilePage() {
                 Edit Profil
               </Button>
             ) : (
-              <FollowButton initialFollowing={false} />
+              <FollowButton userId={profile.id} initialFollowing={profile.is_following ?? false} />
             )}
           </div>
 
           <div className="mb-3">
-            <h1 className="text-xl font-bold text-card-foreground">{profile.username}</h1>
-            <p className="text-sm text-muted-foreground">@{profile.username}</p>
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl font-bold text-card-foreground">{profile.username}</h1>
+              <span className="text-xs font-medium bg-brand/10 text-brand px-2 py-0.5 rounded-full">
+                Lv.{profile.level}
+              </span>
+            </div>
+            <div className="flex items-center gap-2 mt-0.5">
+              <p className="text-sm text-muted-foreground">@{profile.username}</p>
+              <span className="text-xs text-muted-foreground">·</span>
+              <span className="text-xs text-muted-foreground">{profile.reputation_points} poin</span>
+            </div>
           </div>
 
           {profile.bio && (
@@ -130,7 +139,7 @@ export default function UserProfilePage() {
                   <p className="text-sm text-muted-foreground text-center py-8">Belum ada postingan</p>
                 )}
                 {tabContent.posts.map((post) => (
-                  <PostCard key={post.id} post={post as any} />
+                  <PostCard key={post.id} post={post} />
                 ))}
               </div>
             )}
