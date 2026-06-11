@@ -3,11 +3,8 @@
 import Link from "next/link";
 import { User, Bookmark, Settings, LogOut } from "lucide-react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-
-const dummyUser = {
-  name: "Muhammad King Nasir",
-  username: "@kingnasir17",
-};
+import { useUser, useLogout } from "@/hooks/use-auth";
+import { useRouter } from "next/navigation";
 
 const menuItems = [
   { href: "/profile", label: "Profil", icon: User },
@@ -16,12 +13,19 @@ const menuItems = [
 ];
 
 export default function UserDropdown() {
-  const initials = dummyUser.name
-    .split(" ")
-    .slice(0, 2)
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase();
+  const router = useRouter();
+  const { data: user } = useUser();
+  const logout = useLogout();
+
+  const initials = user?.username
+    ? user.username.slice(0, 2).toUpperCase()
+    : "?";
+
+  const handleLogout = () => {
+    logout.mutate(undefined, {
+      onSuccess: () => router.push("/login"),
+    });
+  };
 
   return (
     <DropdownMenu.Root>
@@ -41,8 +45,12 @@ export default function UserDropdown() {
           className="z-[100] min-w-[200px] bg-sidebar border border-sidebar-border rounded-xl shadow-xl py-1.5"
         >
           <div className="px-4 py-3 border-b border-sidebar-border">
-            <p className="text-sm font-semibold text-sidebar-foreground truncate">{dummyUser.name}</p>
-            <p className="text-xs text-muted-foreground truncate">{dummyUser.username}</p>
+            <p className="text-sm font-semibold text-sidebar-foreground truncate">
+              {user?.username ?? "..."}
+            </p>
+            <p className="text-xs text-muted-foreground truncate">
+              @{user?.username ?? "..."}
+            </p>
           </div>
 
           <div className="py-1">
@@ -64,10 +72,11 @@ export default function UserDropdown() {
           <DropdownMenu.Item asChild>
             <button
               className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-destructive hover:bg-sidebar-accent transition-colors cursor-pointer outline-none"
-              onClick={() => console.log("Logout")}
+              onClick={handleLogout}
+              disabled={logout.isPending}
             >
               <LogOut size={16} />
-              Keluar
+              {logout.isPending ? "Keluar..." : "Keluar"}
             </button>
           </DropdownMenu.Item>
         </DropdownMenu.Content>

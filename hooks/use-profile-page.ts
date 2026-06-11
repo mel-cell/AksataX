@@ -1,68 +1,11 @@
+"use client";
+
 import { useState } from "react";
-
-const DUMMY_CURRENT_USER = {
-  id: "u001",
-  username: "budi_dev",
-};
-
-const DUMMY_PROFILE = {
-  id: "u002",
-  username: "anisa_ui",
-  name: "Anisa Putri",
-  bio: "UI/UX Designer & Frontend Dev 🎨 | Ngoding sambil ngopi ☕ | Open for collab!",
-  avatar: "https://i.pravatar.cc/150?img=47",
-  postsCount: 24,
-  followersCount: 1340,
-  followingCount: 287,
-  isFollowing: false,
-};
-
-const DUMMY_POSTS = [
-  {
-    id: "p1",
-    title: "Redesign Landing Page Klien",
-    body: "Baru selesai redesign landing page klien, hasilnya cukup memuaskan!",
-    user: { username: "anisa_ui" },
-    category: { name: "Design" },
-    comments_count: 12,
-    view_count: 340,
-    user_liked: false,
-    is_bookmarked: false,
-  },
-  {
-    id: "p2",
-    title: "Tips Tailwind CSS yang Jarang Diketahui",
-    body: "Gunakan @apply di CSS global untuk class yang sering dipakai biar lebih rapi.",
-    user: { username: "anisa_ui" },
-    category: { name: "Frontend" },
-    comments_count: 38,
-    view_count: 912,
-    user_liked: true,
-    is_bookmarked: false,
-  },
-  {
-    id: "p3",
-    title: "Kesan Ikut Meetup Next.js",
-    body: "Senang banget bisa ikut meetup Next.js kemarin! Banyak insight baru soal App Router.",
-    user: { username: "anisa_ui" },
-    category: { name: "Event" },
-    comments_count: 7,
-    view_count: 210,
-    user_liked: false,
-    is_bookmarked: true,
-  },
-];
-
-const DUMMY_FOLLOWERS = [
-  { id: "u003", username: "rizky_fs", name: "Rizky Fullstack", avatar: "https://i.pravatar.cc/150?img=12", isFollowing: true },
-  { id: "u004", username: "mila_design", name: "Mila Designer", avatar: "https://i.pravatar.cc/150?img=21", isFollowing: false },
-  { id: "u005", username: "dani_code", name: "Dani Coder", avatar: "https://i.pravatar.cc/150?img=33", isFollowing: true },
-];
-
-const DUMMY_FOLLOWING = [
-  { id: "u006", username: "tegar_be", name: "Tegar Backend", avatar: "https://i.pravatar.cc/150?img=15", isFollowing: true },
-  { id: "u007", username: "sari_react", name: "Sari React Dev", avatar: "https://i.pravatar.cc/150?img=25", isFollowing: true },
-];
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/api";
+import { useUser } from "@/hooks/use-auth";
+import type { ApiResponse } from "@/types/api";
+import type { User, Post } from "@/types/post";
 
 export const TABS = [
   { key: "posts", label: "Postingan" },
@@ -72,22 +15,99 @@ export const TABS = [
 
 export type TabKey = "posts" | "followers" | "following";
 
-export function useProfilePage(username: string) {
-  const [activeTab, setActiveTab] = useState<TabKey>("posts");
+export interface FollowerItem {
+  id: string;
+  username: string;
+  name: string;
+  avatar: string;
+  isFollowing: boolean;
+}
 
-  const isOwnProfile = username === DUMMY_CURRENT_USER.username;
+export function useProfilePage(username?: string) {
+  const [activeTab, setActiveTab] = useState<TabKey>("posts");
+  const { data: currentUser } = useUser();
+
+  const targetUsername = username || currentUser?.username;
+
+  const profileQuery = useQuery<User>({
+    queryKey: ["profile-by-username", targetUsername],
+    queryFn: async () => {
+      const { data } = await api.get<ApiResponse<User>>(`/users/by-username/${targetUsername}`);
+      return data.data;
+    },
+    enabled: !!targetUsername,
+  });
+
+  const profile = profileQuery.data;
+
+  const isOwnProfile = profile?.id === currentUser?.id;
+
+  const postsQuery = useQuery<Post[]>({
+    queryKey: ["user-posts", profile?.id],
+    queryFn: async () => {
+      const { data } = await api.get("/posts", {
+        params: { user: profile?.id, per_page: 50 },
+      });
+      return (data.data ?? []) as Post[];
+    },
+    enabled: !!profile?.id,
+  });
+
+  const followersQuery = useQuery<FollowerItem[]>({
+    queryKey: ["user-followers", profile?.id],
+    queryFn: async () => {
+      const { data } = await api.get(`/users/${profile?.id}/followers`);
+      const items = (data.data ?? []) as any[];
+      return items.map((item: any) => ({
+        id: item.follower?.id ?? item.id,
+        username: item.follower?.username ?? "",
+        name: item.follower?.username ?? "",
+        avatar: item.follower?.avatar_url ?? "",
+        isFollowing: false,
+      }));
+    },
+    enabled: !!profile?.id,
+  });
+
+  const followingQuery = useQuery<FollowerItem[]>({
+    queryKey: ["user-following", profile?.id],
+    queryFn: async () => {
+      const { data } = await api.get(`/users/${profile?.id}/following`);
+      const items = (data.data ?? []) as any[];
+      return items.map((item: any) => ({
+        id: item.following?.id ?? item.id,
+        username: item.following?.username ?? "",
+        name: item.following?.username ?? "",
+        avatar: item.following?.avatar_url ?? "",
+        isFollowing: false,
+      }));
+    },
+    enabled: !!profile?.id,
+  });
 
   const tabContent = {
-    posts: DUMMY_POSTS,
-    followers: DUMMY_FOLLOWERS,
-    following: DUMMY_FOLLOWING,
+    posts: postsQuery.data ?? [],
+    followers: followersQuery.data ?? [],
+    following: followingQuery.data ?? [],
   };
 
   return {
-    profile: DUMMY_PROFILE,
+    profile: profile ?? {
+      id: "",
+      username: "",
+      avatar_url: null,
+      bio: null,
+      reputation_points: 0,
+      created_at: "",
+      roles: [],
+      followers_count: 0,
+      following_count: 0,
+      posts_count: 0,
+    },
     activeTab,
     setActiveTab,
     tabContent,
     isOwnProfile,
+    isLoading: profileQuery.isLoading,
   };
 }

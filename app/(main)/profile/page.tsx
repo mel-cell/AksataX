@@ -27,25 +27,23 @@ function UserListItem({ user }: {
   );
 }
 
-export default function ProfilePage({ params }: { params: { username: string } }) {
-  const { username } = params;
+export default function ProfilePage() {
   const router = useRouter();
 
-  const { profile, activeTab, setActiveTab, tabContent, isOwnProfile } =
-    useProfilePage(username);
+  const { profile, activeTab, setActiveTab, tabContent, isOwnProfile, isLoading } =
+    useProfilePage();
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-2xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-8">
 
-        {/* Profile Card */}
         <div className="bg-card border border-border rounded-2xl p-6 mb-6">
 
           <div className="flex items-start justify-between mb-4">
             <Avatar className="w-20 h-20 ring-4 ring-muted">
-              <AvatarImage src={profile.avatar} alt={profile.name} />
+              <AvatarImage src={profile.avatar_url ?? ""} alt={profile.username} />
               <AvatarFallback className="text-2xl">
-                {profile.name.slice(0, 2).toUpperCase()}
+                {profile.username.slice(0, 2).toUpperCase()}
               </AvatarFallback>
             </Avatar>
 
@@ -54,12 +52,12 @@ export default function ProfilePage({ params }: { params: { username: string } }
                 Edit Profil
               </Button>
             ) : (
-              <FollowButton initialFollowing={profile.isFollowing} />
+              <FollowButton initialFollowing={false} />
             )}
           </div>
 
           <div className="mb-3">
-            <h1 className="text-xl font-bold text-card-foreground">{profile.name}</h1>
+            <h1 className="text-xl font-bold text-card-foreground">{profile.username}</h1>
             <p className="text-sm text-muted-foreground">@{profile.username}</p>
           </div>
 
@@ -69,23 +67,22 @@ export default function ProfilePage({ params }: { params: { username: string } }
 
           <div className="flex items-center gap-6 pt-3 border-t border-border">
             <div className="text-center">
-              <p className="text-base font-bold text-card-foreground">{profile.postsCount}</p>
+              <p className="text-base font-bold text-card-foreground">{profile.posts_count}</p>
               <p className="text-xs text-muted-foreground">Postingan</p>
             </div>
             <div className="text-center cursor-pointer" onClick={() => setActiveTab("followers")}>
               <p className="text-base font-bold text-card-foreground">
-                {profile.followersCount.toLocaleString("id-ID")}
+                {profile.followers_count.toLocaleString("id-ID")}
               </p>
               <p className="text-xs text-muted-foreground">Pengikut</p>
             </div>
             <div className="text-center cursor-pointer" onClick={() => setActiveTab("following")}>
-              <p className="text-base font-bold text-card-foreground">{profile.followingCount}</p>
+              <p className="text-base font-bold text-card-foreground">{profile.following_count}</p>
               <p className="text-xs text-muted-foreground">Mengikuti</p>
             </div>
           </div>
         </div>
 
-        {/* Tabs */}
         <div className="bg-card border border-border rounded-2xl overflow-hidden">
 
           <div className="flex border-b border-border">
@@ -110,6 +107,9 @@ export default function ProfilePage({ params }: { params: { username: string } }
           <div className="p-4">
             {activeTab === "posts" && (
               <div className="flex flex-col gap-4">
+                {tabContent.posts.length === 0 && (
+                  <p className="text-sm text-muted-foreground text-center py-8">Belum ada postingan</p>
+                )}
                 {tabContent.posts.map((post) => (
                   <PostCard key={post.id} post={post as any} />
                 ))}
@@ -118,6 +118,11 @@ export default function ProfilePage({ params }: { params: { username: string } }
 
             {(activeTab === "followers" || activeTab === "following") && (
               <div className="flex flex-col gap-1">
+                {tabContent[activeTab].length === 0 && (
+                  <p className="text-sm text-muted-foreground text-center py-8">
+                    {activeTab === "followers" ? "Belum ada pengikut" : "Belum mengikuti siapapun"}
+                  </p>
+                )}
                 {tabContent[activeTab].map((user) => (
                   <UserListItem key={user.id} user={user} />
                 ))}

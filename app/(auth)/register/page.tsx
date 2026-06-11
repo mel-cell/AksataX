@@ -1,20 +1,34 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useRegister, setToken } from "@/hooks/use-auth";
 
 export default function RegisterPage() {
-  const [name, setName] = useState("");
+  const router = useRouter();
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const register = useRegister();
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
-    localStorage.setItem(
-      "aksata-user",
-      JSON.stringify({ name, email, password })
+    register.mutate(
+      {
+        username,
+        email,
+        password,
+        password_confirmation: passwordConfirmation,
+      },
+      {
+        onSuccess: (result) => {
+          setToken(result.token);
+          router.push("/");
+        },
+      }
     );
-    alert("Data berhasil disimpan di localStorage");
   };
 
   return (
@@ -54,17 +68,22 @@ export default function RegisterPage() {
             <p className="mt-0.5 text-xs text-[#A8A29E]">Daftar ke AksataX mulai diskusi</p>
           </div>
 
+          {register.isError && (
+            <p className="mb-4 text-xs text-red-500">Registrasi gagal. Coba lagi.</p>
+          )}
+
           {/* Form */}
           <form onSubmit={handleRegister} className="space-y-4">
             <div>
               <label className="mb-1.5 block text-[11px] font-medium uppercase tracking-widest text-[#78716C]">
-                Nama
+                Username
               </label>
               <input
                 type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Nama lengkap"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="username"
+                required
                 className="w-full rounded-lg border border-[#E7E5E4] bg-[#FAFAF9] px-3 py-2 text-sm text-[#1C1917] outline-none transition focus:border-[#A8A29E] focus:bg-white placeholder:text-[#D6D3D1]"
               />
             </div>
@@ -78,6 +97,7 @@ export default function RegisterPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="email@example.com"
+                required
                 className="w-full rounded-lg border border-[#E7E5E4] bg-[#FAFAF9] px-3 py-2 text-sm text-[#1C1917] outline-none transition focus:border-[#A8A29E] focus:bg-white placeholder:text-[#D6D3D1]"
               />
             </div>
@@ -91,15 +111,31 @@ export default function RegisterPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
+                required
+                className="w-full rounded-lg border border-[#E7E5E4] bg-[#FAFAF9] px-3 py-2 text-sm text-[#1C1917] outline-none transition focus:border-[#A8A29E] focus:bg-white placeholder:text-[#D6D3D1]"
+              />
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-[11px] font-medium uppercase tracking-widest text-[#78716C]">
+                Konfirmasi Password
+              </label>
+              <input
+                type="password"
+                value={passwordConfirmation}
+                onChange={(e) => setPasswordConfirmation(e.target.value)}
+                placeholder="••••••••"
+                required
                 className="w-full rounded-lg border border-[#E7E5E4] bg-[#FAFAF9] px-3 py-2 text-sm text-[#1C1917] outline-none transition focus:border-[#A8A29E] focus:bg-white placeholder:text-[#D6D3D1]"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full rounded-lg bg-[#1C1917] text-[#FAFAF9] py-2.5 text-sm font-medium transition hover:bg-[#292524]"
+              disabled={register.isPending}
+              className="w-full rounded-lg bg-[#1C1917] text-[#FAFAF9] py-2.5 text-sm font-medium transition hover:bg-[#292524] disabled:opacity-50"
             >
-              Daftar
+              {register.isPending ? "Memproses..." : "Daftar"}
             </button>
           </form>
 

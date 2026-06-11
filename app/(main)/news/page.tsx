@@ -4,14 +4,14 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import type { Post } from "@/types/post";
 import PostCard from "@/components/posts/post-card";
-import { TrendingUp, Loader2 } from "lucide-react";
+import { Newspaper, Loader2 } from "lucide-react";
 
-export default function TrendingPage() {
+export default function NewsPage() {
   const { data: posts, isLoading } = useQuery<Post[]>({
-    queryKey: ["trending-posts"],
+    queryKey: ["news-posts"],
     queryFn: async () => {
       const { data } = await api.get("/posts", {
-        params: { sort: "view_count", order: "desc", per_page: 50 },
+        params: { sort: "created_at", order: "desc", per_page: 50 },
       });
       return (data.data ?? []) as Post[];
     },
@@ -20,21 +20,21 @@ export default function TrendingPage() {
   return (
     <div className="p-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-[#1C1917]">Trending</h1>
-        <p className="mt-1 text-xs text-[#A8A29E]">Postingan paling populer</p>
+        <h1 className="text-2xl font-bold text-[#1C1917]">News</h1>
+        <p className="mt-1 text-xs text-[#A8A29E]">Postingan terbaru</p>
       </div>
 
       {isLoading && (
         <div className="flex items-center justify-center py-20 text-[#A8A29E]">
           <Loader2 size={20} className="animate-spin mr-2" />
-          Memuat trending...
+          Memuat news...
         </div>
       )}
 
       {posts && posts.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20 text-[#A8A29E]">
-          <TrendingUp size={32} className="mb-3" />
-          <p className="text-sm">Belum ada postingan trending</p>
+          <Newspaper size={32} className="mb-3" />
+          <p className="text-sm">Belum ada postingan</p>
         </div>
       )}
 

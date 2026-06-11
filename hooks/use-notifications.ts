@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
+import { getToken } from "@/hooks/use-auth";
 import type { ApiResponse } from "@/types/api";
 import type { Notification } from "@/types/notification";
 
@@ -12,6 +13,8 @@ export function useNotifications() {
       const { data } = await api.get<ApiResponse<Notification[]>>("/notifications");
       return data.data;
     },
+    enabled: !!getToken(),
+    retry: false,
   });
 }
 
@@ -24,6 +27,8 @@ export function useUnreadCount() {
       );
       return data.data;
     },
+    enabled: !!getToken(),
+    retry: false,
   });
 }
 
