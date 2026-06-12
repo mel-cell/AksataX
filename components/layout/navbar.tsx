@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Search, Bell } from "lucide-react";
+import { Search } from "lucide-react";
 import { useState, useEffect } from "react";
 import UserDropdown from "./UserDropdown";
-import { useUnreadCount } from "@/hooks/use-notifications";
+import NotificationDropdown from "@/components/ui/NotificationDropdown";
 import { getToken } from "@/hooks/use-auth";
 import Image from "next/image";
 
@@ -13,7 +13,6 @@ export default function Navbar() {
     const router = useRouter();
     const [searchQuery, setSearchQuery] = useState("");
     const [isAuth, setIsAuth] = useState(false);
-    const { data: unread } = useUnreadCount();
 
     useEffect(() => {
         setIsAuth(!!getToken());
@@ -61,17 +60,7 @@ export default function Navbar() {
 
             {isAuth ? (
                 <>
-                    <Link
-                        href="/notifications"
-                        className="relative p-2 rounded-lg text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
-                    >
-                        <Bell size={18} />
-                        {unread && unread.unread_count > 0 && (
-                            <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[9px] font-bold px-1 rounded-full min-w-4 text-center leading-tight">
-                                {unread.unread_count > 99 ? "99+" : unread.unread_count}
-                            </span>
-                        )}
-                    </Link>
+                    <NotificationDropdown />
                     <UserDropdown />
                 </>
             ) : (

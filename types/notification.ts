@@ -1,7 +1,18 @@
+export interface NotificationData {
+  actor_id?: string;
+  actor_username?: string;
+  actor_avatar_url?: string;
+  type: string;
+  vote_type?: string;
+  reference_id?: string;
+  reference_type?: string;
+  message?: string;
+}
+
 export interface Notification {
   id: string;
   type: string;
-  data: Record<string, unknown>;
+  data: NotificationData;
   read_at: string | null;
   created_at: string;
 }
