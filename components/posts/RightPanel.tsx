@@ -112,13 +112,10 @@ export default function RightPanel() {
     const seen = new Set<string>();
     const users = recentPosts
       .filter((p) => {
-        const isAdminOrMod =
-          p.user.username === "admin" ||
-          p.user.username === "moderator" ||
-          p.user.roles?.some(
-            (r) => r.name.toLowerCase() === "admin" || r.name.toLowerCase() === "moderator",
-          );
-        if (isAdminOrMod) return false;
+        const isExcluded = p.user.roles?.some(
+          (r) => r.name.toLowerCase() === "admin" || r.name.toLowerCase() === "moderator",
+        );
+        if (isExcluded) return false;
         if (seen.has(p.user.id)) return false;
         seen.add(p.user.id);
         return true;
