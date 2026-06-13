@@ -4,8 +4,9 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { useUser } from "@/hooks/use-auth";
+import { useProfile } from "@/hooks/use-profile";
 import type { ApiResponse } from "@/types/api";
-import type { User } from "@/types/user";
+import type { User, UserWithLevel } from "@/types/user";
 import type { Post } from "@/types/post";
 
 export const TABS = [
@@ -26,15 +27,23 @@ export interface FollowerItem {
 
 export function useProfilePage(username?: string) {
   const [activeTab, setActiveTab] = useState<TabKey>("posts");
+
   const { data: currentUser } = useUser();
+  const { data: profileUser } = useProfile();
 
-  const targetUsername = username || currentUser?.username;
+  const targetUsername = username || profileUser?.username;
 
-  const profileQuery = useQuery<User>({
+  const profileQuery = useQuery<UserWithLevel>({
     queryKey: ["profile-by-username", targetUsername],
     queryFn: async () => {
-      const { data } = await api.get<ApiResponse<User>>(`/users/by-username/${targetUsername}`);
-      return data.data;
+      const { data } = await api.get<ApiResponse<User>>(
+        `/users/by-username/${targetUsername}`,
+      );
+
+      return {
+        ...data.data,
+        level: Math.floor(data.data.reputation_points / 50),
+      };
     },
     enabled: !!targetUsername,
   });
@@ -47,8 +56,12 @@ export function useProfilePage(username?: string) {
     queryKey: ["user-posts", profile?.id],
     queryFn: async () => {
       const { data } = await api.get("/posts", {
-        params: { user: profile?.id, per_page: 50 },
+        params: {
+          user: profile?.id,
+          per_page: 50,
+        },
       });
+
       return (data.data ?? []) as Post[];
     },
     enabled: !!profile?.id,
@@ -58,7 +71,16 @@ export function useProfilePage(username?: string) {
     queryKey: ["user-followers", profile?.id],
     queryFn: async () => {
       const { data } = await api.get(`/users/${profile?.id}/followers`);
-      const items = (data.data ?? []) as { follower?: { id: string; username: string; avatar_url: string }; id: string }[];
+
+      const items = (data.data ?? []) as {
+        follower?: {
+          id: string;
+          username: string;
+          avatar_url: string;
+        };
+        id: string;
+      }[];
+
       return items.map((item) => ({
         id: item.follower?.id ?? item.id,
         username: item.follower?.username ?? "",
@@ -74,7 +96,16 @@ export function useProfilePage(username?: string) {
     queryKey: ["user-following", profile?.id],
     queryFn: async () => {
       const { data } = await api.get(`/users/${profile?.id}/following`);
-      const items = (data.data ?? []) as { following?: { id: string; username: string; avatar_url: string }; id: string }[];
+
+      const items = (data.data ?? []) as {
+        following?: {
+          id: string;
+          username: string;
+          avatar_url: string;
+        };
+        id: string;
+      }[];
+
       return items.map((item) => ({
         id: item.following?.id ?? item.id,
         username: item.following?.username ?? "",
@@ -93,20 +124,23 @@ export function useProfilePage(username?: string) {
   };
 
   return {
-    profile: profile ?? {
-      id: "",
-      username: "",
-      avatar_url: null,
-      bio: null,
-      reputation_points: 0,
-      level: 1,
-      created_at: "",
-      roles: [],
-      followers_count: 0,
-      following_count: 0,
-      posts_count: 0,
-      is_following: false,
-    },
+    profile:
+      profile ??
+      ({
+        id: "",
+        username: "",
+        avatar_url: "",
+        bio: null,
+        reputation_points: 0,
+        level: 0,
+        created_at: "",
+        roles: [],
+        followers_count: 0,
+        following_count: 0,
+        posts_count: 0,
+        is_following: false,
+      } as UserWithLevel),
+
     activeTab,
     setActiveTab,
     tabContent,

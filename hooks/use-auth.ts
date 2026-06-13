@@ -5,6 +5,7 @@ import { api } from "@/lib/api";
 import type { ApiResponse } from "@/types/api";
 import type { User } from "@/types/user";
 
+
 export function useUser() {
   return useQuery<User>({
     queryKey: ["user"],

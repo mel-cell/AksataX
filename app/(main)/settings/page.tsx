@@ -1,50 +1,71 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUser, getToken } from "@/hooks/use-auth";
-import { useProfile, useUpdateProfile, useDeleteAvatar } from "@/hooks/use-profile";
+import {
+  useProfile,
+  useUpdateProfile,
+  useDeleteAvatar,
+} from "@/hooks/use-profile";
 import { useChangePassword } from "@/hooks/use-change-password";
-import { Settings, LogOut, Loader2, Camera, Trash2, Save, Eye, EyeOff, Check, X } from "lucide-react";
+
+import {
+  Settings,
+  LogOut,
+  Loader2,
+  Camera,
+  Trash2,
+  Save,
+  Eye,
+  EyeOff,
+  Check,
+} from "lucide-react";
+
+import { AxiosError } from "axios";
 
 export default function SettingsPage() {
   const router = useRouter();
-  const [isAuth, setIsAuth] = useState(false);
-  const { data: user, isLoading: userLoading } = useUser();
+
+  const isAuth = !!getToken();
+
+  const { isLoading: userLoading } = useUser();
+
   const { data: profile, refetch: refetchProfile } = useProfile();
+
   const updateProfile = useUpdateProfile();
   const deleteAvatar = useDeleteAvatar();
   const changePassword = useChangePassword();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [username, setUsername] = useState("");
-  const [bio, setBio] = useState("");
+ const [username, setUsername] = useState(() => profile?.username ?? "");
+
+ const [bio, setBio] = useState(() => profile?.bio ?? "");
+
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+
   const [showNewPassword, setShowNewPassword] = useState(false);
+
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const [currentPassword, setCurrentPassword] = useState("");
+
   const [newPassword, setNewPassword] = useState("");
+
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const [profileSuccess, setProfileSuccess] = useState("");
+
   const [profileError, setProfileError] = useState("");
+
   const [passwordSuccess, setPasswordSuccess] = useState("");
+
   const [passwordError, setPasswordError] = useState("");
-
-  useEffect(() => {
-    setIsAuth(!!getToken());
-  }, []);
-
-  useEffect(() => {
-    if (profile) {
-      setUsername(profile.username);
-      setBio(profile.bio ?? "");
-    }
-  }, [profile]);
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -55,36 +76,72 @@ export default function SettingsPage() {
 
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
+
     setProfileSuccess("");
     setProfileError("");
 
-    const form = new FormData();
-    form.append("username", username);
-    form.append("bio", bio);
-    if (avatarFile) form.append("avatar", avatarFile);
-    form.append("_method", "PUT");
-
     try {
-      await updateProfile.mutateAsync(form);
+      const formData = new FormData();
+
+      // kirim username
+      formData.append("username", username);
+      formData.append("bio", bio);
+
+      // kirim avatar kalau ada
+      if (avatarFile) {
+        formData.append("avatar", avatarFile);
+      }
+
+      // cek di console
+      for (const pair of formData.entries()) {
+        console.log(pair[0], pair[1]);
+      }
+      await updateProfile.mutateAsync({
+        username,
+        bio,
+      });
+      // refresh profile
+      await refetchProfile();
+
       setProfileSuccess("Profil berhasil diperbarui");
+
       setAvatarFile(null);
-      refetchProfile();
-    } catch (err: any) {
-      setProfileError(err.response?.data?.message || "Gagal menyimpan profil");
+    } catch (err: unknown) {
+      const error = err as AxiosError<{
+        message?: string;
+        errors?: Record<string, string[]>;
+      }>;
+
+      if (error.response?.data?.errors) {
+        setProfileError(
+          Object.values(error.response.data.errors).flat().join(", "),
+        );
+      } else {
+        setProfileError(
+          error.response?.data?.message ?? "Gagal memperbarui profil",
+        );
+      }
     }
   };
 
   const handleDeleteAvatar = async () => {
     setProfileSuccess("");
     setProfileError("");
+
     try {
       await deleteAvatar.mutateAsync();
       setAvatarPreview(null);
       setAvatarFile(null);
       setProfileSuccess("Avatar berhasil dihapus");
       refetchProfile();
-    } catch (err: any) {
-      setProfileError(err.response?.data?.message || "Gagal menghapus avatar");
+    } catch (err: unknown) {
+      const error = err as AxiosError<{
+        message?: string;
+      }>;
+
+      setProfileError(
+        error.response?.data?.message ?? "Gagal menghapus avatar",
+      );
     }
   };
 
@@ -108,8 +165,14 @@ export default function SettingsPage() {
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
-    } catch (err: any) {
-      setPasswordError(err.response?.data?.message || "Gagal mengubah password");
+    } catch (err: unknown) {
+      const error = err as AxiosError<{
+        message?: string;
+      }>;
+
+      setPasswordError(
+        error.response?.data?.message ?? "Gagal mengubah password",
+      );
     }
   };
 
@@ -119,13 +182,22 @@ export default function SettingsPage() {
     router.push("/login");
   };
 
+  const currentUsername = username || profile?.username || "";
+
+  const currentBio = bio || profile?.bio || "";
+
+  console.log("FORM USERNAME:", username);
+  console.log("FORM BIO:", bio);
+
   if (!isAuth) {
     return (
       <div className="p-6">
         <h1 className="text-2xl font-bold text-foreground mb-4">Pengaturan</h1>
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <Settings size={32} className="mb-3 text-muted-foreground" />
-          <p className="text-sm text-muted-foreground">Login untuk mengakses pengaturan</p>
+          <p className="text-sm text-muted-foreground">
+            Login untuk mengakses pengaturan
+          </p>
         </div>
       </div>
     );
@@ -146,8 +218,13 @@ export default function SettingsPage() {
       <h1 className="text-2xl font-bold text-foreground">Pengaturan</h1>
 
       {/* Edit Profil */}
-      <form onSubmit={handleSaveProfile} className="bg-card border border-border rounded-xl p-5 space-y-5">
-        <h2 className="text-sm font-semibold text-card-foreground">Edit Profil</h2>
+      <form
+        onSubmit={handleSaveProfile}
+        className="bg-card border border-border rounded-xl p-5 space-y-5"
+      >
+        <h2 className="text-sm font-semibold text-card-foreground">
+          Edit Profil
+        </h2>
 
         {profileSuccess && (
           <div className="flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg px-4 py-3">
@@ -160,11 +237,27 @@ export default function SettingsPage() {
           </div>
         )}
 
+        {profileSuccess && (
+          <div className="bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg px-4 py-3">
+            {profileSuccess}
+          </div>
+        )}
+
+        {profileError && (
+          <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3">
+            {profileError}
+          </div>
+        )}
+
         {/* Avatar */}
         <div className="flex items-center gap-4">
-          <div className="relative w-16 h-16 rounded-full overflow-hidden bg-zinc-100 flex-shrink-0">
+          <div className="relative w-16 h-16 rounded-full overflow-hidden bg-zinc-100 shrink-0">
             {avatarSrc ? (
-              <img src={avatarSrc} alt="avatar" className="w-full h-full object-cover" />
+              <img
+                src={avatarSrc}
+                alt="avatar"
+                className="w-full h-full object-cover"
+              />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-lg font-bold text-zinc-400">
                 {(profile?.username ?? "?").slice(0, 2).toUpperCase()}
@@ -186,7 +279,12 @@ export default function SettingsPage() {
                 disabled={deleteAvatar.isPending}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-200 text-xs text-red-600 hover:bg-red-50 transition-colors"
               >
-                <Trash2 size={14} /> Hapus
+                {deleteAvatar.isPending ? (
+                  <Loader2 size={14} className="animate-spin" />
+                ) : (
+                  <Trash2 size={14} />
+                )}
+                Hapus
               </button>
             )}
           </div>
@@ -200,19 +298,24 @@ export default function SettingsPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-card-foreground mb-1.5">Username</label>
+          <label className="block text-sm font-medium text-card-foreground mb-1.5">
+            Username
+          </label>
           <input
             type="text"
-            value={username}
+            value={currentUsername}
             onChange={(e) => setUsername(e.target.value)}
             className="w-full border border-border bg-card text-card-foreground rounded-lg px-3 py-2.5 text-sm placeholder-muted-foreground"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-card-foreground mb-1.5">Bio</label>
+          <label className="block text-sm font-medium text-card-foreground mb-1.5">
+            Bio
+          </label>
+          
           <textarea
-            value={bio}
+            value={currentBio}
             onChange={(e) => setBio(e.target.value)}
             rows={3}
             className="w-full border border-border bg-card text-card-foreground rounded-lg px-3 py-2.5 text-sm placeholder-muted-foreground resize-y"
@@ -234,8 +337,13 @@ export default function SettingsPage() {
       </form>
 
       {/* Ubah Password */}
-      <form onSubmit={handleChangePassword} className="bg-card border border-border rounded-xl p-5 space-y-5">
-        <h2 className="text-sm font-semibold text-card-foreground">Ubah Password</h2>
+      <form
+        onSubmit={handleChangePassword}
+        className="bg-card border border-border rounded-xl p-5 space-y-5"
+      >
+        <h2 className="text-sm font-semibold text-card-foreground">
+          Ubah Password
+        </h2>
 
         {passwordSuccess && (
           <div className="flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg px-4 py-3">
@@ -249,7 +357,9 @@ export default function SettingsPage() {
         )}
 
         <div>
-          <label className="block text-sm font-medium text-card-foreground mb-1.5">Password Saat Ini</label>
+          <label className="block text-sm font-medium text-card-foreground mb-1.5">
+            Password Saat Ini
+          </label>
           <div className="relative">
             <input
               type={showCurrentPassword ? "text" : "password"}
@@ -268,7 +378,9 @@ export default function SettingsPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-card-foreground mb-1.5">Password Baru</label>
+          <label className="block text-sm font-medium text-card-foreground mb-1.5">
+            Password Baru
+          </label>
           <div className="relative">
             <input
               type={showNewPassword ? "text" : "password"}
@@ -287,7 +399,9 @@ export default function SettingsPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-card-foreground mb-1.5">Konfirmasi Password Baru</label>
+          <label className="block text-sm font-medium text-card-foreground mb-1.5">
+            Konfirmasi Password Baru
+          </label>
           <div className="relative">
             <input
               type={showConfirmPassword ? "text" : "password"}
