@@ -36,6 +36,7 @@ export function useCreateComment() {
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["comments", variables.postId] });
+      queryClient.invalidateQueries({ queryKey: ["post", variables.postId] });
     },
   });
 }
@@ -86,6 +87,30 @@ export function useLikeComment() {
   return useMutation({
     mutationFn: async (id: string) => {
       const { data } = await api.post<ApiResponse<{ is_liked: boolean }>>(`/comments/${id}/like`);
+      return data.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["comments"] });
+    },
+  });
+}
+
+export function useGetReplies(commentId: string, enabled: boolean) {
+  return useQuery<Comment[]>({
+    queryKey: ["replies", commentId],
+    queryFn: async () => {
+      const { data } = await api.get<ApiResponse<Comment[]>>(`/comments/${commentId}/replies`);
+      return data.data;
+    },
+    enabled: enabled && !!commentId,
+  });
+}
+
+export function useBanComment() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, reason }: { id: string; reason?: string }) => {
+      const { data } = await api.post<ApiResponse<null>>(`/comments/${id}/ban`, { reason });
       return data.data;
     },
     onSuccess: () => {

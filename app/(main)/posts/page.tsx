@@ -5,7 +5,7 @@ import PostCard from "@/components/posts/PostCard";
 import { useInfinitePosts } from "@/hooks/use-infinite-posts";
 import InfiniteScroll from "@/components/ui/InfiniteScroll";
 import Link from "next/link";
-import { Loader2 } from "lucide-react";
+import { Loader2 } from 'lucide-react';
 
 export default function PostsPage() {
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
