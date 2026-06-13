@@ -5,11 +5,11 @@ import { useUser, getToken } from "@/hooks/use-auth";
 import { useInfinitePosts } from "@/hooks/use-infinite-posts";
 import PostCard from "@/components/posts/PostCard";
 import FilterBar from "@/components/posts/FilterBar";
-import RightPanel from "@/components/posts/RightPanel";
 import InfiniteScroll from "@/components/ui/InfiniteScroll";
 import type { FilterState } from "@/types/post";
 import { ImageIcon, FileText, Smile } from "lucide-react";
 import Link from "next/link";
+import RightPanel from '../../components/posts/RightPanel';
 
 const SORT_MAP: Record<string, string> = {
   Terbaru: "created_at",
