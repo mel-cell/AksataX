@@ -3,6 +3,7 @@
 import { useUsers } from "@/hooks/use-users";
 import { useModeratorUsers } from "@/hooks/use-moderator-users";
 import UserTable from "@/components/ui/UserTable";
+import { Loader2 } from "lucide-react";
 
 export default function UsersPage() {
   const { data: users, isLoading, isError } = useUsers();
