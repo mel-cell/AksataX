@@ -7,6 +7,9 @@ export interface NotificationData {
   reference_id?: string;
   reference_type?: string;
   message?: string;
+  level?: number;
+  points?: number;
+  badge_name?: string;
 }
 
 export interface Notification {

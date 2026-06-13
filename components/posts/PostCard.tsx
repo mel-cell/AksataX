@@ -10,6 +10,7 @@ import { formatDistanceToNow } from "date-fns";
 import { id as localeId } from "date-fns/locale/id";
 import { Bookmark, MessageCircle, Eye } from "lucide-react";
 import UserHoverCard from "@/components/ui/UserHoverCard";
+import PostMenu from "@/components/ui/PostMenu";
 
 type Props = {
   post: Post;
@@ -23,7 +24,7 @@ function Avatar({ name }: { name: string }) {
     .slice(0, 2);
 
   return (
-    <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-sm font-semibold text-indigo-600 flex-shrink-0">
+    <div className="w-10 h-10 rounded-full bg-zinc-100 flex items-center justify-center text-sm font-semibold text-zinc-600 flex-shrink-0">
       {initials}
     </div>
   );
@@ -68,8 +69,8 @@ export default function PostCard({ post }: Props) {
 
       // sinkronkan dengan response API
       setBookmarked(result.is_bookmarked);
-    } catch {
-      // kembalikan ke state sebelumnya jika gagal
+    } catch (err) {
+      console.error("Bookmark gagal:", err);
       setBookmarked(previousState);
     }
   };
@@ -160,7 +161,7 @@ export default function PostCard({ post }: Props) {
                       <span className="text-sm font-semibold text-card-foreground">
                         {authorName}
                       </span>
-                      <span className="text-[11px] px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-600 font-medium leading-none">
+                      <span className="text-[11px] px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-600 font-medium leading-none">
                         Lv.{lvl}
                       </span>
                     </div>
@@ -170,12 +171,15 @@ export default function PostCard({ post }: Props) {
                   </div>
                 </button>
               </UserHoverCard>
-              <span className="text-xs text-muted-foreground shrink-0 pt-0.5">
-                {formatDistanceToNow(new Date(created_at), {
-                  addSuffix: true,
-                  locale: localeId as any,
-                })}
-              </span>
+              <div className="flex items-center gap-0.5 shrink-0">
+                <span className="text-xs text-muted-foreground pt-0.5">
+                  {formatDistanceToNow(new Date(created_at), {
+                    addSuffix: true,
+                    locale: localeId as any,
+                  })}
+                </span>
+                <PostMenu postId={id} postTitle={title} authorId={user.id} authorUsername={authorName} />
+              </div>
             </div>
 
             <div className="flex items-center gap-2 flex-wrap mb-2">
@@ -183,7 +187,7 @@ export default function PostCard({ post }: Props) {
                 onClick={(e) =>
                   navigate(e, `/search?category=${category?.slug ?? ""}`)
                 }
-                className="text-xs px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 transition-colors"
+                className="text-xs px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600 border border-zinc-200 hover:bg-zinc-200 transition-colors"
               >
                 {categoryName}
               </button>
@@ -227,8 +231,8 @@ export default function PostCard({ post }: Props) {
                   disabled={toggleBookmark.isPending}
                   className={`flex items-center gap-1 transition-colors ${
                     bookmarked
-                      ? "text-blue-600"
-                      : "text-muted-foreground hover:text-blue-600"
+                      ? "text-amber-500"
+                      : "text-muted-foreground hover:text-amber-500"
                   }`}
                 >
                   <Bookmark

@@ -7,8 +7,9 @@ export interface User {
   id: string;
   username: string;
   email?: string;
-  avatar_url: string;
+  avatar_url: string | null;
   bio: string | null;
+  is_banned: boolean;
   reputation_points: number;
   level: number;
   created_at: string;

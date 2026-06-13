@@ -22,7 +22,7 @@ export default function BookmarksPage() {
       const { data } = await api.get("/posts", {
         params: { bookmarked: 1, page: pageParam, per_page: 10 },
       });
-      return (data.data ?? []) as Post[];
+      return ((data.data ?? []) as Post[]).map((p) => ({ ...p, is_bookmarked: true }));
     },
     getNextPageParam: (lastPage, _allPages, lastPageParam) => {
       if (lastPage.length < 10) return undefined;

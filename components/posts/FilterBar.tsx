@@ -109,7 +109,7 @@ export default function FilterBar({ onFilterChange }: Props) {
             onClick={() => handleTag(tag)}
             className={`text-xs px-3 py-1 rounded-full border transition-colors ${
               activeTags.includes(tag)
-                ? "bg-indigo-100 border-indigo-300 text-indigo-700"
+                ? "bg-zinc-100 border-zinc-300 text-zinc-700"
                 : "border-border text-muted-foreground hover:border-zinc-300 hover:text-card-foreground"
             }`}
           >

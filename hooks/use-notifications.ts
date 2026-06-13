@@ -29,6 +29,7 @@ export function useUnreadCount() {
     },
     enabled: !!getToken(),
     retry: false,
+    refetchInterval: 30000,
   });
 }
 

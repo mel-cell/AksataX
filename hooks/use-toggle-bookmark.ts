@@ -9,14 +9,10 @@ export function useToggleBookmark() {
   return useMutation({
     mutationFn: (postId: string) => postService.toggleBookmark(postId),
 
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["posts"],
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: ["bookmarks"],
-      });
+    onSuccess: (_data, postId) => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["post", postId] });
+      queryClient.invalidateQueries({ queryKey: ["bookmarked-posts"] });
     },
   });
 }

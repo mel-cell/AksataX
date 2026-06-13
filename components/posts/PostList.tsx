@@ -29,30 +29,30 @@ export default function PostList({ posts, postsPerPage = 10 }: Props) {
     <div>
       <div className="bg-card border border-border rounded-xl p-4 mb-4">
         <div className="flex gap-3 items-center">
-          <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-sm font-semibold text-indigo-600 flex-shrink-0">
+          <div className="w-10 h-10 rounded-full bg-zinc-100 flex items-center justify-center text-sm font-semibold text-zinc-600 flex-shrink-0">
             MK
           </div>
           <input
             type="text"
             placeholder="Apa yang sedang kamu pikirkan?"
-            className="flex-1 text-sm text-muted-foreground placeholder-muted-foreground bg-sidebar-accent rounded-full px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-200 transition"
+            className="flex-1 text-sm text-muted-foreground placeholder-muted-foreground bg-sidebar-accent rounded-full px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-zinc-300 transition"
             readOnly
           />
         </div>
         <div className="flex items-center gap-4 mt-3 pt-3 border-t border-border pl-13">
-          <button className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-indigo-500 transition-colors">
+          <button className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors">
             <ImageIcon size={16} />
             <span>Gambar</span>
           </button>
-          <button className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-indigo-500 transition-colors">
+          <button className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors">
             <FileText size={16} />
             <span>Artikel</span>
           </button>
-          <button className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-indigo-500 transition-colors">
+          <button className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors">
             <Smile size={16} />
             <span>Perasaan</span>
           </button>
-          <button className="ml-auto text-xs bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-1.5 rounded-full font-medium transition-colors">
+          <button className="ml-auto text-xs bg-brand hover:bg-brand/90 text-white px-4 py-1.5 rounded-full font-medium transition-colors">
             Posting
           </button>
         </div>
@@ -93,7 +93,7 @@ export default function PostList({ posts, postsPerPage = 10 }: Props) {
                 onClick={() => setPage(p as number)}
                 className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
                   page === p
-                    ? "bg-indigo-50 border border-indigo-300 text-indigo-600"
+                    ? "bg-zinc-100 border border-zinc-300 text-zinc-600"
                     : "border border-border bg-card text-muted-foreground hover:border-zinc-500 hover:text-card-foreground"
                 }`}
               >

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { User, Bookmark, Settings, LogOut } from "lucide-react";
+import { User, Bookmark, Settings, LogOut, ShieldBan } from "lucide-react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useUser, useLogout } from "@/hooks/use-auth";
 import { useRouter } from "next/navigation";
@@ -66,6 +66,21 @@ export default function UserDropdown() {
               </DropdownMenu.Item>
             ))}
           </div>
+
+          {user?.roles?.some((r) => ["admin", "moderator"].includes(r.name.toLowerCase())) && (
+            <>
+              <DropdownMenu.Separator className="my-1 border-t border-sidebar-border" />
+              <DropdownMenu.Item asChild>
+                <Link
+                  href="/moderator/reports"
+                  className="flex items-center gap-3 px-4 py-2.5 text-sm text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-colors cursor-pointer outline-none"
+                >
+                  <ShieldBan size={16} />
+                  Moderator
+                </Link>
+              </DropdownMenu.Item>
+            </>
+          )}
 
           <DropdownMenu.Separator className="my-1 border-t border-sidebar-border" />
 

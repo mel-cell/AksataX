@@ -3,11 +3,9 @@
 import { useState, useMemo } from "react";
 import { User } from "@/types/user";
 
-const PAGE_SIZE = 8;
-
 export function getPrimaryRole(user: User): string {
+  if (user.is_banned) return "banned";
   const names = user.roles.map((r) => r.name);
-  if (names.includes("banned")) return "banned";
   if (names.includes("suspended")) return "suspended";
   if (names.includes("moderator")) return "moderator";
   if (names.includes("admin")) return "admin";
@@ -18,22 +16,22 @@ export function useModeratorUsers(users: User[] = []) {
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const filtered = useMemo(() => {
     return users.filter((u) => {
       const matchSearch =
-        u.username.toLowerCase().includes(search.toLowerCase()) ||
-        (u.email ?? "").toLowerCase().includes(search.toLowerCase());
+        u.username.toLowerCase().includes(search.toLowerCase());
       const matchRole =
         roleFilter === "all" || getPrimaryRole(u) === roleFilter;
       return matchSearch && matchRole;
     });
   }, [users, search, roleFilter]);
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
 
   const openDetail = (user: User) => {
     setSelectedUser(user);
@@ -55,10 +53,16 @@ export function useModeratorUsers(users: User[] = []) {
     setPage(1);
   };
 
+  const handlePageSizeChange = (size: number) => {
+    setPageSize(size);
+    setPage(1);
+  };
+
   return {
     search,
     roleFilter,
     page,
+    pageSize,
     totalPages,
     paginated,
     filteredCount: filtered.length,
@@ -68,6 +72,7 @@ export function useModeratorUsers(users: User[] = []) {
     closeDetail,
     handleSearchChange,
     handleRoleFilterChange,
+    handlePageSizeChange,
     setPage,
   };
 }
