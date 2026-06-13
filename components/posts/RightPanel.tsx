@@ -107,6 +107,7 @@ export default function RightPanel() {
     },
   });
 
+  /* eslint-disable react-hooks/purity */
   const recommendedUsers = useMemo(() => {
     if (!recentPosts) return [];
     const seen = new Set<string>();
@@ -121,11 +122,12 @@ export default function RightPanel() {
         return true;
       })
       .map((p) => p.user);
-    for (let i = users.length - 1; i > 0; i--) {
+    const shuffled = [...users];
+    for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [users[i], users[j]] = [users[j], users[i]];
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
-    return users.slice(0, 5);
+    return shuffled.slice(0, 5);
   }, [recentPosts]);
 
   const trendingTags = useMemo(() => {
@@ -137,6 +139,7 @@ export default function RightPanel() {
     }
     return shuffled.slice(0, 5);
   }, [tags]);
+  /* eslint-enable react-hooks/purity */
 
   return (
     <aside className="flex flex-col gap-4 w-full">
