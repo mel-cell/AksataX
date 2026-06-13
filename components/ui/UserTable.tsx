@@ -179,7 +179,7 @@ export default function UserTable({
                     <RoleBadge role={getPrimaryRole(user)} />
                   </TableCell>
                   <TableCell className="text-sm text-card-foreground">
-                    Lv.{user.level}
+                    Lv.{Math.floor(user.reputation_points / 50)}
                   </TableCell>
                   <TableCell className="text-sm text-card-foreground">
                     {user.reputation_points.toLocaleString("id-ID")}
@@ -299,7 +299,7 @@ export default function UserTable({
                 <div className="space-y-0 border border-border rounded-lg overflow-hidden mb-5">
                   {[
                     { label: "Role", value: <RoleBadge role={getPrimaryRole(selectedUser)} /> },
-                    { label: "Level", value: `Lv.${selectedUser.level}` },
+                    { label: "Level", value: `Lv.${Math.floor(selectedUser.reputation_points / 50)}` },
                     {
                       label: "Reputasi",
                       value: `${selectedUser.reputation_points.toLocaleString("id-ID")} poin`,

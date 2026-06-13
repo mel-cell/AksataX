@@ -58,10 +58,10 @@ export default function PostDetailPage() {
     const sharePost = useCallback(() => {
         if (!post) return;
         const url = window.location.href;
-        const hasNativeShare = typeof navigator !== 'undefined' && (navigator as any).share;
+        const hasNativeShare = typeof navigator !== 'undefined' && (navigator as unknown as Record<string, unknown>).share;
         
         if (hasNativeShare) {
-            (navigator as any).share({
+            (navigator as unknown as Record<string, unknown>).share({
                 title: post.title,
                 url: url,
             }).catch(() => {});

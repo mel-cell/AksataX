@@ -87,10 +87,16 @@ export default function CreatePostPage() {
 
       router.push("/");
     } catch (err: unknown) {
-      const error = err as { response?: { data?: { message?: string } } };
+      const error = err as { response?: { data?: { message?: string; errors?: Record<string, string[]> } } };
       const message = error.response?.data?.message;
+      const errors = error.response?.data?.errors;
       if (message === "Tidak terautentikasi") {
         setError("Silakan login terlebih dahulu");
+        return;
+      }
+      if (errors) {
+        const firstError = Object.values(errors).flat()[0];
+        setError(firstError || "Validasi gagal");
         return;
       }
       setError(message || "Gagal membuat postingan");

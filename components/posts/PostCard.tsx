@@ -104,7 +104,7 @@ export default function PostCard({ post }: Props) {
   const excerpt =
     body?.slice(0, 180) + (body && body.length > 180 ? "..." : "");
   const rep = user?.reputation_points ?? 0;
-  const lvl = user?.level ?? 1;
+  const lvl = Math.floor(rep / 50);
 
   return (
     <div className="block group">

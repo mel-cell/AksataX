@@ -3,12 +3,9 @@
 import { useUsers } from "@/hooks/use-users";
 import { useModeratorUsers } from "@/hooks/use-moderator-users";
 import UserTable from "@/components/ui/UserTable";
-import { Loader2 } from "lucide-react";
-import { useQueryClient } from "@tanstack/react-query";
-import { api } from "@/lib/api";
 
 export default function UsersPage() {
-  const { data: users, isLoading, isError, refetch } = useUsers();
+  const { data: users, isLoading, isError } = useUsers();
   const table = useModeratorUsers(users ?? []);
 
   if (isLoading) {
