@@ -166,25 +166,7 @@ export function CommentItem({
 
             {/* Action row */}
             <div className="flex items-center gap-1 mt-2.5 flex-wrap -ml-1">
-              {/* Like */}
-              <button
-                onClick={() => likeMutation.mutate(comment.id)}
-                disabled={likeMutation.isPending}
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
-                  comment.user_liked
-                    ? "bg-rose-50 text-rose-500"
-                    : "text-muted-foreground hover:bg-muted hover:text-rose-500"
-                }`}
-              >
-                <Heart
-                  size={13}
-                  className={comment.user_liked ? "fill-rose-500" : ""}
-                />
-                {comment.like_count > 0 && (
-                  <span>{comment.like_count}</span>
-                )}
-                Suka
-              </button>
+              
 
               {/* Balas — hanya depth 0 */}
               {depth === 0 && (
