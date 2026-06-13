@@ -58,7 +58,7 @@ export default function UserHoverCard({
             className="flex items-center gap-3 mb-3 hover:opacity-80 transition-opacity"
             onClick={() => setShow(false)}
           >
-            <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-sm font-medium text-indigo-600 flex-shrink-0">
+            <div className="w-10 h-10 rounded-full bg-zinc-100 flex items-center justify-center text-sm font-medium text-zinc-600 flex-shrink-0">
               {username.slice(0, 2).toUpperCase()}
             </div>
             <div className="min-w-0">

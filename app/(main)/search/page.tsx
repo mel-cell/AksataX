@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, Suspense } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams, useRouter } from "next/navigation";
 import { api } from "@/lib/api";
@@ -25,7 +25,7 @@ const TAB_MAP: Record<string, Tab> = {
   user: "Pengguna",
 };
 
-export default function SearchPage() {
+function SearchContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const tagParam = searchParams.get("tag");
@@ -191,7 +191,7 @@ export default function SearchPage() {
                     href={`/user/${user.username}`}
                     className="flex items-center gap-3 bg-card border border-border rounded-xl px-4 py-3 hover:bg-sidebar-accent transition-colors"
                   >
-                    <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-xs font-semibold text-indigo-600 flex-shrink-0">
+                    <div className="w-9 h-9 rounded-full bg-zinc-100 flex items-center justify-center text-xs font-semibold text-zinc-600 flex-shrink-0">
                       {user.username?.slice(0, 2).toUpperCase() ?? "?"}
                     </div>
                     <div className="min-w-0 flex-1">
@@ -261,5 +261,18 @@ export default function SearchPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={
+      <div className="max-w-7xl mx-auto px-4 py-10 space-y-4 animate-pulse">
+        <div className="h-10 bg-muted rounded w-64" />
+        <div className="h-64 bg-muted rounded" />
+      </div>
+    }>
+      <SearchContent />
+    </Suspense>
   );
 }

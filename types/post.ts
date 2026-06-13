@@ -2,6 +2,7 @@ import type { User } from "./user";
 import type { Category } from "./category";
 import type { Tag } from "./tag";
 import type { Comment } from "./comment";
+import type { ModerationLog } from "./moderation";
 
 export interface Post {
   id: string;
@@ -25,6 +26,7 @@ export interface Post {
   user_vote: string | null;
   user_liked: boolean;
   is_bookmarked: boolean;
+  moderation?: ModerationLog | null;
 }
 
 export type FilterTab = "Semua" | "Belum Terjawab" | "Terjawab";

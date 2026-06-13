@@ -15,8 +15,9 @@ export function useToggleVote() {
       voteType: "upvote" | "downvote";
     }) => postService.toggleVote(postId, voteType),
 
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["post", variables.postId] });
     },
   });
 }

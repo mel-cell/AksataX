@@ -283,4 +283,8 @@ export function useTerms(slug: string) {
   }, []);
 
   return { doc, activeSection, setActiveSection, scrollToSection };
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> b512825a161dfb1b5af50c0097424e21c0ef8f9f

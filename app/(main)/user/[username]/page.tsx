@@ -35,6 +35,10 @@ export default function UserProfilePage() {
   const { profile, activeTab, setActiveTab, tabContent, isOwnProfile, isLoading } =
     useProfilePage(username);
 
+  const postsCount = tabContent.posts.length || profile.posts_count;
+  const followersCount = tabContent.followers.length || profile.followers_count;
+  const followingCount = tabContent.following.length || profile.following_count;
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20 text-muted-foreground">
@@ -95,17 +99,17 @@ export default function UserProfilePage() {
 
           <div className="flex items-center gap-6 pt-3 border-t border-border">
             <div className="text-center">
-              <p className="text-base font-bold text-card-foreground">{profile.posts_count}</p>
+              <p className="text-base font-bold text-card-foreground">{postsCount}</p>
               <p className="text-xs text-muted-foreground">Postingan</p>
             </div>
             <div className="text-center cursor-pointer" onClick={() => setActiveTab("followers")}>
               <p className="text-base font-bold text-card-foreground">
-                {profile.followers_count.toLocaleString("id-ID")}
+                {followersCount.toLocaleString("id-ID")}
               </p>
               <p className="text-xs text-muted-foreground">Pengikut</p>
             </div>
             <div className="text-center cursor-pointer" onClick={() => setActiveTab("following")}>
-              <p className="text-base font-bold text-card-foreground">{profile.following_count}</p>
+              <p className="text-base font-bold text-card-foreground">{followingCount}</p>
               <p className="text-xs text-muted-foreground">Mengikuti</p>
             </div>
           </div>

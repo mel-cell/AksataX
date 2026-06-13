@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useUser, getToken } from "@/hooks/use-auth";
 import { useProfile, useUpdateProfile, useDeleteAvatar } from "@/hooks/use-profile";
+import { api } from "@/lib/api";
 import { useChangePassword } from "@/hooks/use-change-password";
 import { Settings, LogOut, Loader2, Camera, Trash2, Save, Eye, EyeOff, Check, X } from "lucide-react";
 
@@ -113,9 +114,14 @@ export default function SettingsPage() {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await api.post("/logout");
+    } catch {
+    }
     localStorage.removeItem("token");
     localStorage.removeItem("access_token");
+    delete api.defaults.headers.common["Authorization"];
     router.push("/login");
   };
 

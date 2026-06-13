@@ -82,7 +82,7 @@ function UserAvatar({ name, avatarUrl }: { name: string; avatarUrl?: string | nu
   }
 
   return (
-    <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-xs font-semibold text-indigo-600 flex-shrink-0">
+    <div className="w-9 h-9 rounded-full bg-zinc-100 flex items-center justify-center text-xs font-semibold text-zinc-600 flex-shrink-0">
       {initials}
     </div>
   );

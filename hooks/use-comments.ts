@@ -43,12 +43,16 @@ export function useCreateComment() {
 export function useUpdateComment() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, body }: { id: string; body: string }) => {
+    mutationFn: async ({ id, body, postId }: { id: string; body: string; postId?: string }) => {
       const { data } = await api.put<ApiResponse<Comment>>(`/comments/${id}`, { body });
       return data.data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["comments"] });
+    onSuccess: (_data, variables) => {
+      if (variables.postId) {
+        queryClient.invalidateQueries({ queryKey: ["comments", variables.postId] });
+      } else {
+        queryClient.invalidateQueries({ queryKey: ["comments"] });
+      }
     },
   });
 }
@@ -56,12 +60,16 @@ export function useUpdateComment() {
 export function useDeleteComment() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (id: string) => {
+    mutationFn: async ({ id, postId }: { id: string; postId?: string }) => {
       const { data } = await api.delete<ApiResponse<null>>(`/comments/${id}`);
       return data.data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["comments"] });
+    onSuccess: (_data, variables) => {
+      if (variables.postId) {
+        queryClient.invalidateQueries({ queryKey: ["comments", variables.postId] });
+      } else {
+        queryClient.invalidateQueries({ queryKey: ["comments"] });
+      }
     },
   });
 }
@@ -69,14 +77,18 @@ export function useDeleteComment() {
 export function useVoteComment() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, type }: { id: string; type: "upvote" | "downvote" }) => {
+    mutationFn: async ({ id, type, postId }: { id: string; type: "upvote" | "downvote"; postId?: string }) => {
       const { data } = await api.post<ApiResponse<{ vote_score: number }>>(`/comments/${id}/vote`, {
-        type,
+        vote_type: type,
       });
       return data.data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["comments"] });
+    onSuccess: (_data, variables) => {
+      if (variables.postId) {
+        queryClient.invalidateQueries({ queryKey: ["comments", variables.postId] });
+      } else {
+        queryClient.invalidateQueries({ queryKey: ["comments"] });
+      }
     },
   });
 }
@@ -84,12 +96,16 @@ export function useVoteComment() {
 export function useLikeComment() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (id: string) => {
+    mutationFn: async ({ id, postId }: { id: string; postId?: string }) => {
       const { data } = await api.post<ApiResponse<{ is_liked: boolean }>>(`/comments/${id}/like`);
       return data.data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["comments"] });
+    onSuccess: (_data, variables) => {
+      if (variables.postId) {
+        queryClient.invalidateQueries({ queryKey: ["comments", variables.postId] });
+      } else {
+        queryClient.invalidateQueries({ queryKey: ["comments"] });
+      }
     },
   });
 }

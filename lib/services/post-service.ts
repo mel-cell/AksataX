@@ -37,6 +37,16 @@ export const postService = {
     return data.data;
   },
 
+  async deletePost(postId: string) {
+    const { data } = await api.delete(`/posts/${postId}`);
+    return data.data;
+  },
+
+  async updatePost(postId: string, payload: { title?: string; body?: string; category_id?: string; tags?: string[] }) {
+    const { data } = await api.put(`/posts/${postId}`, payload);
+    return data.data;
+  },
+
   async toggleVote(postId: string, voteType: "upvote" | "downvote") {
     const { data } = await api.post(`/posts/${postId}/vote`, { vote_type: voteType });
 
