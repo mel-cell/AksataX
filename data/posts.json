@@ -1,0 +1,236 @@
+[
+  {
+    "id": "post-1",
+    "title": "Cara Memulai Belajar React di 2026",
+    "body": "React masih menjadi library frontend paling populer. Dengan dirilisnya React 19, ada banyak fitur baru yang memudahkan developer. Di artikel ini saya akan bahas langkah-langkah memulai React dari nol.\n\nPertama, pastikan Anda sudah paham dasar JavaScript (ES6+). Kedua, pelajari JSX dan komponen. Ketiga, pahami state management dengan hooks.\n\nSelamat belajar!",
+    "slug": "cara-memulai-belajar-react-2026",
+    "status": "published",
+    "vote_score": 15,
+    "view_count": 342,
+    "comments_count": 5,
+    "bookmarks_count": 12,
+    "is_answered": true,
+    "accepted_answer_id": "comment-1",
+    "created_at": "2026-06-07T08:00:00Z",
+    "updated_at": "2026-06-08T10:00:00Z",
+    "user": {
+      "id": "user-1",
+      "username": "kingnasir17",
+      "avatar_url": "",
+      "bio": "Full-stack developer | Open source enthusiast",
+      "reputation_points": 1250,
+      "created_at": "2024-01-15T08:00:00Z",
+      "roles": [{ "id": "role-1", "name": "user" }],
+      "followers_count": 42,
+      "following_count": 18,
+      "posts_count": 7
+    },
+    "category": { "id": "cat-1", "name": "Pemrograman", "slug": "pemrograman", "description": "Diskusi seputar bahasa pemrograman" },
+    "tags": [
+      { "id": "tag-2", "name": "react", "slug": "react", "color": "#61DAFB", "posts_count": 6 },
+      { "id": "tag-3", "name": "nextjs", "slug": "nextjs", "color": "#000000", "posts_count": 5 }
+    ],
+    "comments": [
+      {
+        "id": "comment-1",
+        "body": "Terima kasih! Sangat membantu untuk pemula seperti saya. Jadi semangat belajar React.",
+        "vote_score": 8,
+        "is_accepted": true,
+        "created_at": "2026-06-07T10:00:00Z",
+        "updated_at": "2026-06-07T10:00:00Z",
+        "user": { "id": "user-3", "username": "bunga_putri", "avatar_url": "", "bio": "", "reputation_points": 640, "created_at": "2024-03-10T14:00:00Z", "roles": [{ "id": "role-1", "name": "user" }], "followers_count": 15, "following_count": 22, "posts_count": 5 },
+        "replies_count": 1
+      },
+      {
+        "id": "comment-2",
+        "body": "Menurutku yang paling penting itu praktek langsung, bikin proyek kecil-kecilan.",
+        "vote_score": 5,
+        "is_accepted": false,
+        "created_at": "2026-06-08T08:00:00Z",
+        "updated_at": "2026-06-08T08:00:00Z",
+        "user": { "id": "user-5", "username": "tegar_aji", "avatar_url": "", "bio": "", "reputation_points": 2100, "created_at": "2024-01-05T09:00:00Z", "roles": [{ "id": "role-1", "name": "user" }], "followers_count": 67, "following_count": 30, "posts_count": 12 },
+        "replies_count": 0
+      }
+    ],
+    "user_vote": "upvote",
+    "user_liked": false,
+    "is_bookmarked": true
+  },
+  {
+    "id": "post-2",
+    "title": "Tips Desain UI/UX untuk Aplikasi Mobile",
+    "body": "Desain UI/UX yang baik adalah kunci kesuksesan aplikasi mobile. Berikut beberapa tips yang saya pelajari selama bekerja sebagai UX designer.\n\n1. Kenali user Anda\n2. Konsisten dengan design system\n3. Prioritaskan accessibility\n4. Jangan takut untuk prototyping\n5. Testing dengan real user\n\nSemoga bermanfaat!",
+    "slug": "tips-desain-ui-ux-aplikasi-mobile",
+    "status": "published",
+    "vote_score": 22,
+    "view_count": 567,
+    "comments_count": 8,
+    "bookmarks_count": 25,
+    "is_answered": false,
+    "accepted_answer_id": null,
+    "created_at": "2026-06-06T14:00:00Z",
+    "updated_at": "2026-06-07T16:00:00Z",
+    "user": {
+      "id": "user-2",
+      "username": "rindiani_",
+      "avatar_url": "",
+      "bio": "UI/UX Designer | Crafting digital experiences",
+      "reputation_points": 890,
+      "created_at": "2024-02-20T10:30:00Z",
+      "roles": [{ "id": "role-1", "name": "user" }],
+      "followers_count": 28,
+      "following_count": 35,
+      "posts_count": 4
+    },
+    "category": { "id": "cat-2", "name": "Desain", "slug": "desain", "description": "UI/UX, graphic design, dan visual kreatif" },
+    "tags": [
+      { "id": "tag-6", "name": "ui-ux", "slug": "ui-ux", "color": "#FF6B6B", "posts_count": 5 },
+      { "id": "tag-4", "name": "tailwind", "slug": "tailwind", "color": "#06B6D4", "posts_count": 4 }
+    ],
+    "comments": [
+      {
+        "id": "comment-3",
+        "body": "Setuju banget sama poin nomor 4! Prototyping di Figma itu game changer.",
+        "vote_score": 10,
+        "is_accepted": false,
+        "created_at": "2026-06-07T09:00:00Z",
+        "updated_at": "2026-06-07T09:00:00Z",
+        "user": { "id": "user-1", "username": "kingnasir17", "avatar_url": "", "bio": "", "reputation_points": 1250, "created_at": "2024-01-15T08:00:00Z", "roles": [{ "id": "role-1", "name": "user" }], "followers_count": 42, "following_count": 18, "posts_count": 7 },
+        "replies_count": 1
+      }
+    ],
+    "user_vote": null,
+    "user_liked": true,
+    "is_bookmarked": false
+  },
+  {
+    "id": "post-3",
+    "title": "Next.js 16: Apa yang Baru?",
+    "body": "Next.js 16 hadir dengan banyak peningkatan performa dan fitur baru. Partial Prerendering (PPR) kini stable, Turbopack semakin cepat, dan ada perbaikan di Server Actions.\n\nYang paling menarik adalah peningkatan ISR (Incremental Static Regeneration) yang kini mendukung tag-based revalidation tanpa perlu redeploy.\n\nCek dokumentasi resmi untuk info lebih lanjut!",
+    "slug": "nextjs-16-apa-yang-baru",
+    "status": "published",
+    "vote_score": 31,
+    "view_count": 892,
+    "comments_count": 12,
+    "bookmarks_count": 40,
+    "is_answered": false,
+    "accepted_answer_id": null,
+    "created_at": "2026-06-05T11:00:00Z",
+    "updated_at": "2026-06-06T09:00:00Z",
+    "user": {
+      "id": "user-4",
+      "username": "sekawan_dev",
+      "avatar_url": "",
+      "bio": "Sekawan Dev Team — building awesome things",
+      "reputation_points": 3200,
+      "created_at": "2023-11-01T07:00:00Z",
+      "roles": [{ "id": "role-2", "name": "admin" }],
+      "followers_count": 120,
+      "following_count": 45,
+      "posts_count": 23
+    },
+    "category": { "id": "cat-3", "name": "Teknologi", "slug": "teknologi", "description": "Berita dan diskusi tentang teknologi terbaru" },
+    "tags": [
+      { "id": "tag-3", "name": "nextjs", "slug": "nextjs", "color": "#000000", "posts_count": 5 },
+      { "id": "tag-1", "name": "javascript", "slug": "javascript", "color": "#F7DF1E", "posts_count": 8 }
+    ],
+    "comments": [
+      {
+        "id": "comment-4",
+        "body": "PPR akhirnya stable! Nunggu fitur ini dari lama.",
+        "vote_score": 7,
+        "is_accepted": false,
+        "created_at": "2026-06-05T14:00:00Z",
+        "updated_at": "2026-06-05T14:00:00Z",
+        "user": { "id": "user-1", "username": "kingnasir17", "avatar_url": "", "bio": "", "reputation_points": 1250, "created_at": "2024-01-15T08:00:00Z", "roles": [{ "id": "role-1", "name": "user" }], "followers_count": 42, "following_count": 18, "posts_count": 7 },
+        "replies_count": 0
+      }
+    ],
+    "user_vote": "upvote",
+    "user_liked": true,
+    "is_bookmarked": true
+  },
+  {
+    "id": "post-4",
+    "title": "Panduan Memulai Open Source Contribution",
+    "body": "Bingung cara mulai kontribusi open source? Ikuti langkah-langkah berikut:\n\n1. Cari repositori yang menarik di GitHub\n2. Mulai dari issue bertuliskan 'good first issue'\n3. Fork repositori dan clone ke lokal\n4. Buat branch baru untuk perubahan Anda\n5. Commit dan push, lalu buat Pull Request\n\nJangan takut salah! Maintainer biasanya akan membantu review.",
+    "slug": "panduan-memulai-open-source",
+    "status": "published",
+    "vote_score": 45,
+    "view_count": 1203,
+    "comments_count": 15,
+    "bookmarks_count": 55,
+    "is_answered": true,
+    "accepted_answer_id": "comment-5",
+    "created_at": "2026-06-04T07:00:00Z",
+    "updated_at": "2026-06-05T12:00:00Z",
+    "user": {
+      "id": "user-5",
+      "username": "tegar_aji",
+      "avatar_url": "",
+      "bio": "Backend engineer | PHP, Go, Rust",
+      "reputation_points": 2100,
+      "created_at": "2024-01-05T09:00:00Z",
+      "roles": [{ "id": "role-1", "name": "user" }],
+      "followers_count": 67,
+      "following_count": 30,
+      "posts_count": 12
+    },
+    "category": { "id": "cat-5", "name": "Open Source", "slug": "open-source", "description": "Kontribusi open source dan kolaborasi proyek" },
+    "tags": [
+      { "id": "tag-7", "name": "backend", "slug": "backend", "color": "#6B5B95", "posts_count": 4 },
+      { "id": "tag-1", "name": "javascript", "slug": "javascript", "color": "#F7DF1E", "posts_count": 8 }
+    ],
+    "comments": [
+      {
+        "id": "comment-5",
+        "body": "Saran dari saya: jangan langsung target repositori besar. Mulai dari repositori kecil dulu untuk membangun kepercayaan diri.",
+        "vote_score": 15,
+        "is_accepted": true,
+        "created_at": "2026-06-04T10:00:00Z",
+        "updated_at": "2026-06-04T10:00:00Z",
+        "user": { "id": "user-4", "username": "sekawan_dev", "avatar_url": "", "bio": "", "reputation_points": 3200, "created_at": "2023-11-01T07:00:00Z", "roles": [{ "id": "role-2", "name": "admin" }], "followers_count": 120, "following_count": 45, "posts_count": 23 },
+        "replies_count": 3
+      }
+    ],
+    "user_vote": "upvote",
+    "user_liked": false,
+    "is_bookmarked": false
+  },
+  {
+    "id": "post-5",
+    "title": "Memahami Konsep Database untuk Pemula",
+    "body": "Database adalah komponen penting dalam pengembangan aplikasi. Artikel ini menjelaskan konsep dasar database relasional dan NoSQL.\n\nRelational Database: MySQL, PostgreSQL — cocok untuk data terstruktur.\nNoSQL: MongoDB, Firebase — cocok untuk skalabilitas tinggi.\n\nPilih sesuai kebutuhan proyek Anda!",
+    "slug": "memahami-konsep-database-pemula",
+    "status": "published",
+    "vote_score": 18,
+    "view_count": 456,
+    "comments_count": 6,
+    "bookmarks_count": 20,
+    "is_answered": false,
+    "accepted_answer_id": null,
+    "created_at": "2026-06-03T09:00:00Z",
+    "updated_at": "2026-06-04T11:00:00Z",
+    "user": {
+      "id": "user-3",
+      "username": "bunga_putri",
+      "avatar_url": "",
+      "bio": "Mahasiswa | Tech & Lifestyle blogger",
+      "reputation_points": 640,
+      "created_at": "2024-03-10T14:00:00Z",
+      "roles": [{ "id": "role-1", "name": "user" }],
+      "followers_count": 15,
+      "following_count": 22,
+      "posts_count": 5
+    },
+    "category": { "id": "cat-1", "name": "Pemrograman", "slug": "pemrograman", "description": "Diskusi seputar bahasa pemrograman" },
+    "tags": [
+      { "id": "tag-8", "name": "database", "slug": "database", "color": "#336791", "posts_count": 3 },
+      { "id": "tag-5", "name": "python", "slug": "python", "color": "#3776AB", "posts_count": 3 }
+    ],
+    "comments": [],
+    "user_vote": null,
+    "user_liked": false,
+    "is_bookmarked": false
+  }
+]

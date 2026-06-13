@@ -1,0 +1,8 @@
+[
+  { "id": "trend-1", "topic": "Next.js 16", "posts_count": 12, "category": "Pemrograman" },
+  { "id": "trend-2", "topic": "Tailwind CSS v4", "posts_count": 9, "category": "Desain" },
+  { "id": "trend-3", "topic": "AI di Indonesia", "posts_count": 7, "category": "Teknologi" },
+  { "id": "trend-4", "topic": "Remote Work 2026", "posts_count": 5, "category": "Karir" },
+  { "id": "trend-5", "topic": "React Server Components", "posts_count": 8, "category": "Pemrograman" },
+  { "id": "trend-6", "topic": "Open Source Contribution", "posts_count": 6, "category": "Open Source" }
+]

@@ -1,0 +1,32 @@
+{
+  "users": [
+    {
+      "id": "33e66497-159c-482b-9dec-dd2cea22548c",
+      "username": "admin",
+      "email": "admin@forum.test",
+      "password": "password",
+      "role": ["admin"],
+      "reputation_points": 150,
+      "level": 5
+    },
+    {
+      "id": "845d3436-2275-46bb-b4d3-7f47dbef9ea0",
+      "username": "moderator",
+      "email": "moderator@forum.test",
+      "password": "password",
+      "role": ["moderator"],
+      "reputation_points": 80,
+      "level": 3
+    },
+    
+    {
+      "id": "2036e7f5-e6af-457a-aa4b-4ef4b824ed93",
+      "username": "user",
+      "email": "user@forum.test",
+      "password": "password",
+      "role": ["user"],
+      "reputation_points": 25,
+      "level": 2
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+export interface Role {
+  id: string;
+  name: string;
+}
+
+export interface User {
+  id: string;
+  username: string;
+  email?: string;
+  avatar_url: string | null;
+  bio: string | null;
+  is_banned: boolean;
+  reputation_points: number;
+  created_at: string;
+  roles: Role[];
+  followers_count: number;
+  following_count: number;
+  posts_count: number;
+  is_following?: boolean;
+}
+
+export interface UserWithLevel extends User {
+  level: number;
+}
