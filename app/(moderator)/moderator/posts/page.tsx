@@ -164,7 +164,7 @@ export default function ModeratorPostsPage() {
                           >
                             <ExternalLink size={14} />
                           </Link>
-                          {post.status === "hidden" && (
+                          {(post.status === "hidden" || post.status === "deleted") && (
                             <button
                               onClick={() => moderatePost.mutate({ postId: post.id, action: "restore" })}
                               disabled={moderatePost.isPending}

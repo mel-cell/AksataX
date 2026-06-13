@@ -16,7 +16,10 @@ import {
     HelpCircle,
     BookOpenText,
     TriangleAlert,
+    LayoutDashboard,
+    LayoutList,
     ShieldBan,
+    Users,
     ChevronDown,
 } from "lucide-react";
 import { useCategories } from "@/hooks/use-categories";
@@ -76,13 +79,33 @@ const secondaryNavLinks: LinkItem[] = [
 const thirdNavLinks: LinkItem[] = [
     { href: "/about", label: "About", icon: Info, color: "sky" },
     { href: "/help", label: "Help", icon: HelpCircle, color: "teal" },
-    { href: "/report-bug", label: "Report Bug", icon: TriangleAlert, color: "rose" },
+    {
+        href: "/report-bug",
+        label: "Report Bug",
+        icon: TriangleAlert,
+        color: "rose",
+    },
 ];
 
 const fourNavLinks: LinkItem[] = [
-    { href: "/terms/aksatax-rule", label: "AksataX Rule", icon: BookOpenText, color: "zinc" },
-    { href: "/terms/privacy-policy", label: "Privacy Policy", icon: BookOpenText, color: "zinc" },
-    { href: "/terms/user-agreement", label: "User Agreement", icon: BookOpenText, color: "zinc" },
+    {
+        href: "/terms/aksatax-rule",
+        label: "AksataX Rule",
+        icon: BookOpenText,
+        color: "zinc",
+    },
+    {
+        href: "/terms/privacy-policy",
+        label: "Privacy Policy",
+        icon: BookOpenText,
+        color: "zinc",
+    },
+    {
+        href: "/terms/user-agreement",
+        label: "User Agreement",
+        icon: BookOpenText,
+        color: "zinc",
+    },
 ];
 
 export default function Sidebar() {
@@ -96,11 +119,16 @@ export default function Sidebar() {
     const { data: allTags } = useTags();
     const { data: unread } = useUnreadCount();
     const { data: currentUser } = useUser();
-    const isMod = currentUser?.roles?.some((r) => ["admin", "moderator"].includes(r.name.toLowerCase()));
+    const isMod = currentUser?.roles?.some((r) =>
+        ["admin", "moderator"].includes(r.name.toLowerCase())
+    );
+    const isAdmin = currentUser?.roles?.some(
+        (r) => r.name.toLowerCase() === "admin"
+    );
     const topCategories = categories?.slice(0, 8) ?? [];
     const topTags = (allTags ?? [])
-      .sort((a, b) => (b.posts_count ?? 0) - (a.posts_count ?? 0))
-      .slice(0, 8);
+        .sort((a, b) => (b.posts_count ?? 0) - (a.posts_count ?? 0))
+        .slice(0, 8);
 
     useEffect(() => {
         setIsAuth(!!getToken());
@@ -119,9 +147,14 @@ export default function Sidebar() {
                         : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
                 }`}
             >
-                <Icon size={18} className={`transition-colors ${
-                    active ? (ACTIVE_ICON[color] ?? "text-brand") : hoverColor
-                }`} />
+                <Icon
+                    size={18}
+                    className={`transition-colors ${
+                        active
+                            ? (ACTIVE_ICON[color] ?? "text-brand")
+                            : hoverColor
+                    }`}
+                />
                 <span>{label}</span>
             </Link>
         );
@@ -157,8 +190,10 @@ export default function Sidebar() {
                 {isAuth &&
                     authLinks.map((item) => {
                         const active = isActive(item.href);
-                        const activeIconColor = ACTIVE_ICON[item.color] ?? "text-brand";
-                        const hoverColor = HOVER_ICON[item.color] ?? "group-hover:text-brand";
+                        const activeIconColor =
+                            ACTIVE_ICON[item.color] ?? "text-brand";
+                        const hoverColor =
+                            HOVER_ICON[item.color] ?? "group-hover:text-brand";
                         return (
                             <Link
                                 key={item.href}
@@ -169,59 +204,114 @@ export default function Sidebar() {
                                         : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
                                 }`}
                             >
-                                <item.icon size={18} className={`transition-colors ${active ? activeIconColor : hoverColor}`} />
+                                <item.icon
+                                    size={18}
+                                    className={`transition-colors ${active ? activeIconColor : hoverColor}`}
+                                />
                                 <span>{item.label}</span>
-                                {item.href === "/notifications" && unread && unread.unread_count > 0 && (
-                                    <span className="ml-auto bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center leading-tight">
-                                        {unread.unread_count > 99 ? "99+" : unread.unread_count}
-                                    </span>
-                                )}
+                                {item.href === "/notifications" &&
+                                    unread &&
+                                    unread.unread_count > 0 && (
+                                        <span className="ml-auto bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center leading-tight">
+                                            {unread.unread_count > 99
+                                                ? "99+"
+                                                : unread.unread_count}
+                                        </span>
+                                    )}
                             </Link>
                         );
                     })}
             </nav>
 
             {isMod && (
-              <>
-                <div className="relative my-2">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-[#E7E5E4]" />
-                  </div>
-                  <div className="relative flex justify-center">
-                    <span className="bg-white px-3 text-[11px] text-[#A8A29E]">
-                      Moderator
-                    </span>
-                  </div>
-                </div>
-                <nav className="flex flex-col gap-0.5 px-2 mt-2">
-                  <Link
-                    href="/moderator/reports"
-                    className={`group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      isActive("/moderator/reports")
-                        ? "text-sidebar-foreground font-semibold"
-                        : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
-                    }`}
-                  >
-                    <TriangleAlert size={18} className={`transition-colors ${
-                      isActive("/moderator/reports") ? "text-rose-500" : "group-hover:text-rose-500"
-                    }`} />
-                    <span>Laporan</span>
-                  </Link>
-                  <Link
-                    href="/moderator/users"
-                    className={`group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      isActive("/moderator/users")
-                        ? "text-sidebar-foreground font-semibold"
-                        : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
-                    }`}
-                  >
-                    <ShieldBan size={18} className={`transition-colors ${
-                      isActive("/moderator/users") ? "text-rose-500" : "group-hover:text-rose-500"
-                    }`} />
-                    <span>Manage User</span>
-                  </Link>
-                </nav>
-              </>
+                <>
+                    <div className="relative my-2">
+                        <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-[#E7E5E4]" />
+                        </div>
+                        <div className="relative flex justify-center">
+                            <span className="bg-white px-3 text-[11px] text-[#A8A29E]">
+                                Moderator
+                            </span>
+                        </div>
+                    </div>
+                    <nav className="flex flex-col gap-0.5 px-2 mt-2">
+                        {isAdmin && (
+                            <Link
+                                href="/admin/dashboard"
+                                className={`group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                    isActive("/admin/dashboard")
+                                        ? "text-sidebar-foreground font-semibold"
+                                        : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                                }`}
+                            >
+                                <LayoutDashboard
+                                    size={18}
+                                    className={`transition-colors ${
+                                        isActive("/admin/dashboard")
+                                            ? "text-cyan-600"
+                                            : "group-hover:text-cyan-600"
+                                    }`}
+                                />
+                                <span>Dashboard</span>
+                            </Link>
+                        )}
+                        <Link
+                            href="/moderator/reports"
+                            className={`group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                isActive("/moderator/reports")
+                                    ? "text-sidebar-foreground font-semibold"
+                                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                            }`}
+                        >
+                            <TriangleAlert
+                                size={18}
+                                className={`transition-colors ${
+                                    isActive("/moderator/reports")
+                                        ? "text-rose-500"
+                                        : "group-hover:text-rose-500"
+                                }`}
+                            />
+                            <span>Laporan</span>
+                        </Link>
+                        <Link
+                            href="/moderator/posts"
+                            className={`group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                isActive("/moderator/posts")
+                                    ? "text-sidebar-foreground font-semibold"
+                                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                            }`}
+                        >
+                            <LayoutList
+                                size={18}
+                                className={`transition-colors ${
+                                    isActive("/moderator/posts")
+                                        ? "text-rose-500"
+                                        : "group-hover:text-rose-500"
+                                }`}
+                            />
+                            <span>Postingan List</span>
+                        </Link>
+                        <Link
+                            href="/moderator/users"
+                            className={`group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                isActive("/moderator/users")
+                                    ? "text-sidebar-foreground font-semibold"
+                                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                            }`}
+                        >
+                            <Users
+                                size={18}
+                                className={`transition-colors ${
+                                    isActive("/moderator/users")
+                                        ? "text-rose-500"
+                                        : "group-hover:text-rose-500"
+                                }`}
+                            />
+                            <span>Manage User</span>
+                        </Link>
+                    </nav>
+                </>
             )}
 
             <div className="relative my-2">
@@ -244,7 +334,8 @@ export default function Sidebar() {
                     {(() => {
                         const active = isActive("/topics");
                         const activeIconColor = "text-sky-600";
-                        const hoverColor = HOVER_ICON["sky"] ?? "group-hover:text-brand";
+                        const hoverColor =
+                            HOVER_ICON["sky"] ?? "group-hover:text-brand";
                         return (
                             <>
                                 <Link
@@ -255,12 +346,17 @@ export default function Sidebar() {
                                             : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
                                     }`}
                                 >
-                                    <Hash size={18} className={`transition-colors ${active ? activeIconColor : hoverColor}`} />
+                                    <Hash
+                                        size={18}
+                                        className={`transition-colors ${active ? activeIconColor : hoverColor}`}
+                                    />
                                     <span>Topik</span>
                                 </Link>
                                 <button
                                     type="button"
-                                    onClick={() => setTopicsClosed(!topicsClosed)}
+                                    onClick={() =>
+                                        setTopicsClosed(!topicsClosed)
+                                    }
                                     className={`flex items-center justify-center w-8 h-9 rounded-r-lg text-sm transition-colors ${
                                         active
                                             ? "text-sidebar-foreground"
@@ -294,7 +390,9 @@ export default function Sidebar() {
                                             <span className="w-1.5 h-1.5 rounded-full bg-brand/60" />
                                             {cat.name}
                                         </span>
-                                        <span className="text-xs text-sidebar-foreground/40">{cat.posts_count}</span>
+                                        <span className="text-xs text-sidebar-foreground/40">
+                                            {cat.posts_count}
+                                        </span>
                                     </Link>
                                 ))}
                             </>
@@ -311,12 +409,15 @@ export default function Sidebar() {
                                         className="flex items-center justify-between px-3 py-1.5 rounded-md text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
                                     >
                                         <span>#{tag.name}</span>
-                                        <span className="text-xs text-sidebar-foreground/40">{tag.posts_count}</span>
+                                        <span className="text-xs text-sidebar-foreground/40">
+                                            {tag.posts_count}
+                                        </span>
                                     </Link>
                                 ))}
                             </>
                         )}
-                        {(categories && categories.length > 8) || (allTags && allTags.length > 8) ? (
+                        {(categories && categories.length > 8) ||
+                        (allTags && allTags.length > 8) ? (
                             <Link
                                 href="/topics"
                                 className="px-3 py-1.5 mt-1 text-xs text-brand hover:underline transition-colors"
