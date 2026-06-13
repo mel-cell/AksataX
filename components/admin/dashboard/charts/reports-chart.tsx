@@ -18,7 +18,7 @@ export function ReportsChart({ data }: { data: ChartPoint[] }) {
           <YAxis tick={{ fontSize: 10, fill: "#A8A29E" }} axisLine={false} tickLine={false} />
           <Tooltip
             contentStyle={{ fontSize: 12, borderRadius: 10, border: "1px solid #E7E5E4" }}
-            formatter={(v: number) => [v, "Laporan"]}
+            formatter={(v: any) => [v ?? 0, "Laporan"]}
           />
           <Bar dataKey="value" fill="#f87171" radius={[6, 6, 0, 0]} maxBarSize={32} />
         </BarChart>

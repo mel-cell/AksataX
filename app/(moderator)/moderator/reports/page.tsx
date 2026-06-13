@@ -91,8 +91,8 @@ export default function ModeratorReportsPage() {
             ) : (
               filtered.map((report) => {
                 const targetUser = report.target_type === "post"
-                  ? (report as any).post?.user
-                  : (report as any).comment?.user;
+                  ? report.post?.user
+                  : report.comment?.user;
                 return (
                   <TableRow key={report.id}>
                     <TableCell className="font-medium text-card-foreground">

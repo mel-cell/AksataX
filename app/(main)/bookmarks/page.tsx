@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useEffect, useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { getToken } from "@/hooks/use-auth";
@@ -10,12 +10,19 @@ import InfiniteScroll from "@/components/ui/InfiniteScroll";
 import { Bookmark, Loader2 } from "lucide-react";
 
 export default function BookmarksPage() {
+  const [mounted, setMounted] = useState(false);
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const {
     data,
     isLoading,
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
+    error,
   } = useInfiniteQuery<Post[]>({
     queryKey: ["bookmarked-posts"],
     queryFn: async ({ pageParam = 1 }) => {
@@ -29,7 +36,7 @@ export default function BookmarksPage() {
       return (lastPageParam as number) + 1;
     },
     initialPageParam: 1,
-    enabled: !!getToken(),
+    enabled: mounted && !!getToken(),
   });
 
   const posts = useMemo(() => data?.pages.flatMap((p) => p) ?? [], [data]);
@@ -45,21 +52,17 @@ export default function BookmarksPage() {
         <p className="mt-1 text-xs text-muted-foreground">Postingan yang kamu simpan</p>
       </div>
 
-      {isLoading && (
+      {!mounted || (isLoading && !posts.length) ? (
         <div className="flex items-center justify-center py-20 text-muted-foreground">
           <Loader2 size={20} className="animate-spin mr-2" />
           Memuat bookmark...
         </div>
-      )}
-
-      {!isLoading && posts.length === 0 && (
+      ) : error || posts.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
           <Bookmark size={32} className="mb-3" />
-          <p className="text-sm">Belum ada bookmark</p>
+          <p className="text-sm">{error ? "Gagal memuat bookmark" : "Belum ada bookmark"}</p>
         </div>
-      )}
-
-      {posts.length > 0 && (
+      ) : (
         <div className="flex flex-col gap-4">
           {posts.map((post) => (
             <PostCard key={post.id} post={post} />

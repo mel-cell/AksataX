@@ -1,20 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Reply,
   Trash2,
   CheckCircle2,
   ChevronRight,
+  ChevronUp,
+  ChevronDown,
   Loader2,
   Flag,
   EyeOff,
+  Pencil,
+  MoreHorizontal,
 } from "lucide-react";
 import type { Comment } from "@/types/comment";
 import { formatDistanceToNow } from "date-fns";
 import { id as localeId } from "date-fns/locale/id";
 import {
   useCreateComment,
+  useVoteComment,
   useLikeComment,
   useDeleteComment,
 } from "@/hooks/use-comments";
@@ -22,7 +27,7 @@ import { useCreateReport } from "@/hooks/use-reports";
 import { useModerateComment } from "@/hooks/use-moderate-comment";
 import { api } from "@/lib/api";
 import type { Role } from "@/types/user";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface CommentItemProps {
   comment: Comment;
@@ -86,6 +91,33 @@ export function CommentItem({
   const [showModerateModal, setShowModerateModal] = useState(false);
   const [moderateReason, setModerateReason] = useState("");
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [editText, setEditText] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const [voteType, setVoteType] = useState<"upvote" | "downvote" | null>(
+    comment.user_vote as "upvote" | "downvote" | null,
+  );
+  const [voteScore, setVoteScore] = useState(comment.vote_score ?? 0);
+  const votePendingRef = useRef(false);
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  useEffect(() => {
+    if (!votePendingRef.current) {
+      setVoteType(comment.user_vote as "upvote" | "downvote" | null);
+      setVoteScore(comment.vote_score ?? 0);
+    }
+  }, [comment.id, comment.user_vote, comment.vote_score]);
+
   const isAccepted = comment.id === acceptedAnswerId;
   const isOwner = currentUserId === comment.user.id;
   const isPostAuthor = currentUserId === postAuthorId;
@@ -93,15 +125,38 @@ export function CommentItem({
     ["admin", "moderator"].includes(r.name.toLowerCase())
   );
   const isLoggedIn = !!currentUserId;
-  const canDelete = isOwner || isMod;
   const canAccept = isPostAuthor && depth === 0;
   const canReport = isLoggedIn && !isOwner && !isMod;
 
+  const voteMutation = useVoteComment();
   const likeMutation = useLikeComment();
   const deleteMutation = useDeleteComment();
   const createComment = useCreateComment();
   const createReport = useCreateReport();
   const moderateComment = useModerateComment();
+
+  const handleVote = async (type: "upvote" | "downvote") => {
+    votePendingRef.current = true;
+    try {
+      const result = await voteMutation.mutateAsync({ id: comment.id, type, postId });
+      setVoteType(result.vote_type ?? null);
+      setVoteScore(result.vote_score);
+    } catch {
+      // ignore
+    }
+    votePendingRef.current = false;
+  };
+
+  const updateMutation = useMutation({
+    mutationFn: async (body: string) => {
+      const { data } = await api.put(`/comments/${comment.id}`, { body });
+      return data;
+    },
+    onSuccess: () => {
+      setIsEditing(false);
+      queryClient.invalidateQueries({ queryKey: ["comments"] });
+    },
+  });
 
   const replies = comment.replies ?? [];
 
@@ -192,13 +247,131 @@ export function CommentItem({
               <span className="text-xs text-muted-foreground ml-auto">
                 {timeAgo}
               </span>
+              {(isOwner || isMod) && (
+                <div ref={menuRef} className="relative">
+                  <button
+                    onClick={() => setMenuOpen(!menuOpen)}
+                    className="p-1 rounded-lg text-muted-foreground hover:text-card-foreground hover:bg-accent transition-colors"
+                    aria-label="Menu komentar"
+                  >
+                    <MoreHorizontal size={14} />
+                  </button>
+                  {menuOpen && (
+                    <div className="absolute right-0 top-full mt-1 w-36 bg-card border border-border rounded-xl shadow-lg overflow-hidden z-50">
+                      <div className="py-1">
+                        {isOwner && (
+                          <button
+                            onClick={() => { setMenuOpen(false); setEditText(comment.body); setIsEditing(true); }}
+                            className="w-full flex items-center gap-2 px-3 py-2 text-xs text-card-foreground hover:bg-accent transition-colors"
+                          >
+                            <Pencil size={13} />
+                            Edit
+                          </button>
+                        )}
+                        {isMod && (
+                          <button
+                            onClick={() => { setMenuOpen(false); setShowModerateModal(true); }}
+                            className="w-full flex items-center gap-2 px-3 py-2 text-xs text-card-foreground hover:bg-accent transition-colors"
+                          >
+                            <EyeOff size={13} />
+                            Sembunyikan
+                          </button>
+                        )}
+                        {(isOwner || isMod) && (
+                          <button
+                            onClick={() => { setMenuOpen(false); deleteMutation.mutate({ id: comment.id, postId }); }}
+                            disabled={deleteMutation.isPending}
+                            className="w-full flex items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 transition-colors"
+                          >
+                            <Trash2 size={13} />
+                            Hapus
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
-            <p className="text-sm text-foreground leading-relaxed">
-              {comment.body}
-            </p>
+            {isEditing ? (
+              <div className="space-y-2">
+                <textarea
+                  value={editText}
+                  onChange={(e) => setEditText(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      updateMutation.mutate(editText);
+                    }
+                  }}
+                  rows={3}
+                  className="w-full resize-none rounded-xl border border-border bg-background text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-zinc-300 focus:border-zinc-400 transition placeholder:text-muted-foreground"
+                />
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => { setIsEditing(false); setEditText(""); }}
+                    disabled={updateMutation.isPending}
+                    className="px-3 py-1 text-xs border border-border rounded-lg text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    onClick={() => updateMutation.mutate(editText)}
+                    disabled={updateMutation.isPending || !editText.trim() || editText === comment.body}
+                    className="px-3 py-1 text-xs bg-brand hover:bg-brand/90 text-white rounded-lg transition-colors flex items-center gap-1 disabled:opacity-50"
+                  >
+                    {updateMutation.isPending && <Loader2 size={12} className="animate-spin" />}
+                    Simpan
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm text-foreground leading-relaxed">
+                {comment.body}
+              </p>
+            )}
 
             <div className="flex items-center gap-1 mt-2.5 flex-wrap -ml-1">
+              {isLoggedIn && (
+                <>
+                  <button
+                    onClick={() => handleVote("upvote")}
+                    disabled={voteMutation.isPending}
+                    className={`w-7 h-7 rounded-md border flex items-center justify-center transition-colors text-xs ${
+                      voteType === "upvote"
+                        ? "bg-green-50 text-green-600 border-green-300"
+                        : "bg-card text-muted-foreground border-border hover:bg-green-50 hover:text-green-600 hover:border-green-300"
+                    }`}
+                    aria-label="Upvote"
+                  >
+                    <ChevronUp size={14} />
+                  </button>
+                  <span className={`text-xs font-semibold tabular-nums min-w-[16px] text-center ${
+                    voteType === "upvote"
+                      ? "text-green-600"
+                      : voteType === "downvote"
+                        ? "text-red-500"
+                        : "text-card-foreground"
+                  }`}>
+                    {voteScore}
+                  </span>
+                  <button
+                    onClick={() => handleVote("downvote")}
+                    disabled={voteMutation.isPending}
+                    className={`w-7 h-7 rounded-md border flex items-center justify-center transition-colors text-xs ${
+                      voteType === "downvote"
+                        ? "bg-red-50 text-red-500 border-red-300"
+                        : "bg-card text-muted-foreground border-border hover:bg-red-50 hover:text-red-500 hover:border-red-300"
+                    }`}
+                    aria-label="Downvote"
+                  >
+                    <ChevronDown size={14} />
+                  </button>
+                  <span className="w-px h-4 bg-border mx-0.5" />
+                </>
+              )}
+
               {depth === 0 && (
                 <button
                   onClick={() => setShowReplyBox((v) => !v)}
@@ -223,16 +396,6 @@ export function CommentItem({
                 </button>
               )}
 
-              {isMod && (
-                <button
-                  onClick={() => setShowModerateModal(true)}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium text-muted-foreground hover:bg-rose-50 hover:text-rose-600 transition-colors"
-                >
-                  <EyeOff size={13} />
-                  Sembunyikan
-                </button>
-              )}
-
               {canReport && (
                 <button
                   onClick={() => setShowReportModal(true)}
@@ -243,16 +406,7 @@ export function CommentItem({
                 </button>
               )}
 
-              {canDelete && (
-                <button
-                  onClick={() => deleteMutation.mutate({ id: comment.id, postId })}
-                  disabled={deleteMutation.isPending}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium text-muted-foreground hover:bg-red-50 hover:text-red-600 transition-colors"
-                >
-                  <Trash2 size={13} />
-                  Hapus
-                </button>
-              )}
+
             </div>
           </div>
         </div>
@@ -263,7 +417,13 @@ export function CommentItem({
           <textarea
             value={replyText}
             onChange={(e) => setReplyText(e.target.value)}
-            placeholder={`Balas komentar ${comment.user.username}...`}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleReplySubmit();
+              }
+            }}
+            placeholder={`Balas komentar ${comment.user.username}... (Enter kirim)`}
             rows={2}
             className="flex-1 resize-none rounded-xl border border-border bg-background text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-zinc-300 focus:border-zinc-400 transition placeholder:text-muted-foreground"
           />

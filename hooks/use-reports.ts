@@ -12,7 +12,7 @@ export function useReports(params?: Record<string, string>) {
   return useQuery<Report[]>({
     queryKey: ["reports", params],
     queryFn: async () => {
-      const { data } = await api.get<ApiResponse<Report[]>>(`/reports${qs ? `?${qs}` : ""}`);
+      const { data } = await api.get<ApiResponse<Report[]>>(`/reports?include=post,comment&${qs}`);
       return data.data;
     },
   });

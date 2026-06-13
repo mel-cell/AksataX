@@ -4,6 +4,8 @@ export interface Comment {
   id: string;
   body: string;
   vote_score: number;
+  user_vote?: string | null;
+  user_liked?: boolean;
   is_accepted: boolean;
   status?: string | null;
   created_at: string;

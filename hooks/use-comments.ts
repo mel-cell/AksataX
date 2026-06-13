@@ -10,7 +10,11 @@ export function useComments(postId: string) {
     queryKey: ["comments", postId],
     queryFn: async () => {
       const { data } = await api.get<ApiResponse<Comment[]>>(`/posts/${postId}/comments`);
-      return data.data;
+      const comments = data.data ?? [];
+      // Sort: newest first, but comments with higher votes stay higher when same time
+      return [...comments].sort((a, b) => {
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      });
     },
     enabled: !!postId,
   });
@@ -36,6 +40,7 @@ export function useCreateComment() {
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["comments", variables.postId] });
+      queryClient.invalidateQueries({ queryKey: ["post", variables.postId] });
     },
   });
 }
@@ -67,6 +72,7 @@ export function useDeleteComment() {
     onSuccess: (_data, variables) => {
       if (variables.postId) {
         queryClient.invalidateQueries({ queryKey: ["comments", variables.postId] });
+        queryClient.invalidateQueries({ queryKey: ["post", variables.postId] });
       } else {
         queryClient.invalidateQueries({ queryKey: ["comments"] });
       }
@@ -78,7 +84,7 @@ export function useVoteComment() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, type, postId }: { id: string; type: "upvote" | "downvote"; postId?: string }) => {
-      const { data } = await api.post<ApiResponse<{ vote_score: number }>>(`/comments/${id}/vote`, {
+      const { data } = await api.post<ApiResponse<{ vote_type?: "upvote" | "downvote"; vote_score: number }>>(`/comments/${id}/vote`, {
         vote_type: type,
       });
       return data.data;

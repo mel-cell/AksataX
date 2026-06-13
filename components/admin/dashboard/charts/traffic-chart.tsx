@@ -24,7 +24,7 @@ export function TrafficChart({ data }: { data: ChartPoint[] }) {
           <YAxis tick={{ fontSize: 10, fill: "#A8A29E" }} axisLine={false} tickLine={false} />
           <Tooltip
             contentStyle={{ fontSize: 12, borderRadius: 10, border: "1px solid #E7E5E4" }}
-            formatter={(v: number) => [v.toLocaleString("id-ID"), "Visitor"]}
+            formatter={(v: any) => [(v ?? 0).toLocaleString("id-ID"), "Visitor"]}
           />
           <Area type="monotone" dataKey="value" stroke="#78716C" strokeWidth={2} fill="url(#trafficGrad)" dot={false} activeDot={{ r: 4, strokeWidth: 0 }} />
         </AreaChart>

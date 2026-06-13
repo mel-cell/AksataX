@@ -1,4 +1,6 @@
 import type { User } from "./user";
+import type { Post } from "./post";
+import type { Comment } from "./comment";
 
 export interface Report {
   id: string;
@@ -11,4 +13,6 @@ export interface Report {
   resolved_at: string | null;
   reporter: User;
   resolver: User | null;
+  post?: Post & { user: User };
+  comment?: Comment & { user: User };
 }

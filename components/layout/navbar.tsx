@@ -11,19 +11,11 @@ import Image from "next/image";
 
 export default function Navbar() {
     const router = useRouter();
-    const [searchQuery, setSearchQuery] = useState("");
     const [isAuth, setIsAuth] = useState(false);
 
     useEffect(() => {
         setIsAuth(!!getToken());
     }, []);
-
-    const handleSearchSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (searchQuery.trim()) {
-            router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
-        }
-    };
 
     return (
         <header className="fixed top-0 left-0 right-0 z-50 h-14 bg-sidebar border-b border-sidebar-border flex items-center px-6 gap-4">
@@ -42,21 +34,6 @@ export default function Navbar() {
 
             <div className="flex-1" />
 
-            <form onSubmit={handleSearchSubmit} className="hidden md:block">
-                <div className="relative">
-                    <Search
-                        size={15}
-                        className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-                    />
-                    <input
-                        type="text"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Cari sesuatu..."
-                        className="w-100 bg-sidebar-accent border border-sidebar-border rounded-full py-2 pl-9 pr-4 text-sm text-sidebar-foreground placeholder-sidebar-foreground/50 focus:outline-none focus:border-brand transition-colors"
-                    />
-                </div>
-            </form>
 
             {isAuth ? (
                 <>
