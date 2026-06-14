@@ -88,30 +88,20 @@ function UserAvatar({ name, avatarUrl }: { name: string; avatarUrl?: string | nu
   );
 }
 
-export default function RightPanel() {
+export default function RightPanel({ posts }: { posts: Post[] }) {
   const { data: tags } = useQuery<TagData[]>({
-    queryKey: ["tags-popular"],
+    queryKey: ["tags"],
     queryFn: async () => {
       const { data } = await api.get<ApiResponse<TagData[]>>("/tags");
       return data.data ?? [];
     },
+    staleTime: 30000,
   });
 
-  const { data: recentPosts } = useQuery<Post[]>({
-    queryKey: ["recent-posts"],
-    queryFn: async () => {
-      const { data } = await api.get("/posts", {
-        params: { sort: "created_at", order: "desc", per_page: 30 },
-      });
-      return (data.data ?? []) as Post[];
-    },
-  });
-
-  /* eslint-disable react-hooks/purity */
   const recommendedUsers = useMemo(() => {
-    if (!recentPosts) return [];
+    if (!posts.length) return [];
     const seen = new Set<string>();
-    const users = recentPosts
+    const users = posts
       .filter((p) => {
         const isExcluded = p.user.roles?.some(
           (r) => r.name.toLowerCase() === "admin" || r.name.toLowerCase() === "moderator",
@@ -128,18 +118,13 @@ export default function RightPanel() {
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
     return shuffled.slice(0, 5);
-  }, [recentPosts]);
+  }, [posts]);
 
   const trendingTags = useMemo(() => {
     if (!tags) return [];
-    const shuffled = [...tags];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled.slice(0, 5);
+    const sorted = [...tags].sort((a, b) => (b.posts_count ?? 0) - (a.posts_count ?? 0));
+    return sorted.slice(0, 5);
   }, [tags]);
-  /* eslint-enable react-hooks/purity */
 
   return (
     <aside className="flex flex-col gap-4 w-full">

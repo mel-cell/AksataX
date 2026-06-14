@@ -16,26 +16,19 @@ export const profileService = {
     bio: string;
     avatar?: File;
   }) {
+    const formData = new FormData();
+    formData.append("username", payload.username);
+    formData.append("bio", payload.bio);
     if (payload.avatar) {
-      const formData = new FormData();
-      formData.append("username", payload.username);
-      formData.append("bio", payload.bio);
       formData.append("avatar", payload.avatar);
-      formData.append("_method", "PUT");
-
-      const response = await api.post("/profile", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      return response.data.data;
     }
 
-    const response = await api.put("/profile", {
-      username: payload.username,
-      bio: payload.bio,
+    // use put for update data profile user
+    const response = await api.put("/profile", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     });
-
     return response.data.data;
   },
 

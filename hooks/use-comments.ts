@@ -103,7 +103,7 @@ export function useLikeComment() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, postId }: { id: string; postId?: string }) => {
-      const { data } = await api.post<ApiResponse<{ is_liked: boolean }>>(`/comments/${id}/like`);
+      const { data } = await api.post<ApiResponse<{ liked: boolean }>>(`/comments/${id}/like`);
       return data.data;
     },
     onSuccess: (_data, variables) => {

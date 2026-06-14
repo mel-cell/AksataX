@@ -60,49 +60,38 @@ function notifMessage(notif: Notification): { text: string; href: string | null 
         text: `${actor} mulai mengikuti Anda`,
         href: data.actor_username ? `/user/${data.actor_username}` : null,
       };
-    case "accepted_answer":
+    case "answer_accepted":
       return {
         text: `${actor} menerima jawaban Anda`,
         href: data.reference_id ? `/posts/${data.reference_id}` : null,
       };
-    case "reply":
+    case "report_resolved":
       return {
-        text: `${actor} membalas komentar Anda`,
-        href: data.reference_id ? `/posts/${data.reference_id}` : null,
-      };
-    case "like":
-      return {
-        text: `${actor} menyukai postingan Anda`,
-        href: data.reference_id ? `/posts/${data.reference_id}` : null,
-      };
-    case "level_up":
-      return {
-        text: `Selamat! Level Anda naik ke ${data.level ?? "level baru"}`,
+        text: data.outcome === "dismissed"
+          ? "Laporan Anda tidak dapat ditindaklanjuti"
+          : "Laporan Anda telah diproses, konten disembunyikan",
         href: null,
       };
-    case "reputation":
+    case "content_moderated":
       return {
-        text: `Poin reputasi Anda bertambah ${data.points ? `+${data.points}` : ""}`,
+        text: `${data.action === "hide" ? "Konten" : "Postingan"} Anda telah ${data.action === "hide" ? "disembunyikan" : "dipulihkan"} oleh moderator`,
         href: null,
       };
-    case "badge":
+    case "user_status":
       return {
-        text: `Anda mendapatkan lencana ${data.badge_name ?? "baru"}`,
+        text: data.action === "warned"
+          ? `Anda mendapat peringatan: ${data.reason ?? ""}`
+          : `Akun Anda telah dikenakan sanksi: ${data.action === "shadow_banned" ? "Shadow Ban" : data.action ?? "status berubah"}`,
         href: null,
       };
-    case "mention":
+    case "report_created":
       return {
-        text: `${actor} menyebut Anda dalam postingan`,
-        href: data.reference_id ? `/posts/${data.reference_id}` : null,
-      };
-    case "system":
-      return {
-        text: data.message ?? "Pemberitahuan sistem",
+        text: `Laporan baru dari ${actor}: ${data.reason ?? ""}`,
         href: null,
       };
-    case "report":
+    case "post_appeal":
       return {
-        text: "Laporan Anda telah diproses",
+        text: `${actor} mengajukan banding untuk postingan "${data.post_title ?? ""}"`,
         href: null,
       };
     default:

@@ -11,14 +11,11 @@ export interface User {
   bio: string | null;
   is_banned: boolean;
   reputation_points: number;
+  level: number;
   created_at: string;
   roles: Role[];
   followers_count: number;
   following_count: number;
   posts_count: number;
   is_following?: boolean;
-}
-
-export interface UserWithLevel extends User {
-  level: number;
 }

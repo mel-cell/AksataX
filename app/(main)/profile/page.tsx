@@ -69,7 +69,7 @@ export default function ProfilePage() {
     );
   }
 
-  const level = Math.floor(profile.reputation_points / 50);
+  const level = profile.level ?? Math.floor(profile.reputation_points / 50);
 
   const avatarUrl = profile.avatar_url
     ? profile.avatar_url.startsWith("http")

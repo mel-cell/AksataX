@@ -10,6 +10,20 @@ export interface NotificationData {
   level?: number;
   points?: number;
   badge_name?: string;
+  action?: string;
+  reason?: string;
+  post_title?: string;
+  post_id?: string;
+  target_type?: string;
+  target_id?: string;
+  appeal_reason?: string;
+  author_id?: string;
+  report_id?: string;
+  outcome?: string;
+  resolver_id?: string;
+  resolver_username?: string;
+  moderator_id?: string;
+  moderator_username?: string;
 }
 
 export interface Notification {

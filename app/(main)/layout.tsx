@@ -1,6 +1,7 @@
 import Navbar from "@/components/layout/navbar";
 import Sidebar from "@/components/layout/sidebar";
 import BottomNav from "@/components/layout/bottom-nav";
+import { PageViewTracker } from "@/components/PageViewTracker";
 
 export default function MainLayout({
   children,
@@ -9,6 +10,7 @@ export default function MainLayout({
 }) {
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <PageViewTracker />
       <Navbar />
       <div className="flex pt-14">
         <Sidebar />

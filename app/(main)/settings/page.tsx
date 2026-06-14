@@ -74,21 +74,6 @@ export default function SettingsPage() {
     setProfileError("");
 
     try {
-      const formData = new FormData();
-
-      // kirim username
-      formData.append("username", username);
-      formData.append("bio", bio);
-
-      // kirim avatar kalau ada
-      if (avatarFile) {
-        formData.append("avatar", avatarFile);
-      }
-
-      // cek di console
-      for (const pair of formData.entries()) {
-        console.log(pair[0], pair[1]);
-      }
       await updateProfile.mutateAsync({
         username,
         bio,
@@ -223,13 +208,6 @@ export default function SettingsPage() {
     );
   }
 
-  const getAvatarUrl = (url?: string) => {
-    if (!url) return "";
-    return url.startsWith("http")
-      ? url
-      : `https://api.melvin.my.id${url}`;
-  };
-
   const avatarSrc =
     avatarPreview ||
     (profile?.avatar_url
@@ -256,18 +234,6 @@ export default function SettingsPage() {
             <Check size={16} /> {profileSuccess}
           </div>
         )}
-        {profileError && (
-          <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3">
-            {profileError}
-          </div>
-        )}
-
-        {profileSuccess && (
-          <div className="bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg px-4 py-3">
-            {profileSuccess}
-          </div>
-        )}
-
         {profileError && (
           <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3">
             {profileError}

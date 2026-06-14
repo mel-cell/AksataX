@@ -198,7 +198,7 @@ export default function HomeFeedPage() {
         </div>
 
         <div className="hidden lg:block w-72 flex-shrink-0">
-          <RightPanel />
+          <RightPanel posts={allPosts} />
         </div>
       </div>
     </div>

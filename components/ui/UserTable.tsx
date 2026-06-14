@@ -4,10 +4,11 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { User } from "@/types/user";
 import { formatDistanceToNow } from "date-fns";
 import { id as localeId } from "date-fns/locale/id";
-import { Search, X, Users, Loader2, ShieldBan } from "lucide-react";
+import { Search, X, Users, Loader2, ShieldBan, AlertTriangle } from "lucide-react";
 import { api } from "@/lib/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { useUser } from "@/hooks/use-auth";
 import { ShadowBanModal } from "@/components/ui/ShadowBanModal";
 import {
   Table,
@@ -95,7 +96,10 @@ export default function UserTable({
   onCloseDetail,
 }: Props) {
   const queryClient = useQueryClient();
+  const { data: currentUser } = useUser();
   const [shadowBanTarget, setShadowBanTarget] = useState<{ userId: string; username: string } | null>(null);
+
+  const isAdmin = currentUser?.roles?.some((r) => r.name.toLowerCase() === "admin") ?? false;
 
   const handleToggleBan = async (user: User) => {
     try {
@@ -103,6 +107,18 @@ export default function UserTable({
       queryClient.invalidateQueries({ queryKey: ["users"] });
       onCloseDetail();
     } catch {
+    }
+  };
+
+  const handleWarn = async (user: User) => {
+    const reason = window.prompt("Alasan peringatan untuk @" + user.username + ":");
+    if (!reason?.trim()) return;
+    try {
+      await api.post(`/users/${user.id}/warn`, { reason });
+      alert("Peringatan berhasil dikirim ke @" + user.username);
+      onCloseDetail();
+    } catch {
+      alert("Gagal mengirim peringatan");
     }
   };
 
@@ -179,7 +195,7 @@ export default function UserTable({
                     <RoleBadge role={getPrimaryRole(user)} />
                   </TableCell>
                   <TableCell className="text-sm text-card-foreground">
-                    Lv.{Math.floor(user.reputation_points / 50)}
+                    Lv.{user.level ?? Math.floor(user.reputation_points / 50)}
                   </TableCell>
                   <TableCell className="text-sm text-card-foreground">
                     {user.reputation_points.toLocaleString("id-ID")}
@@ -299,7 +315,7 @@ export default function UserTable({
                 <div className="space-y-0 border border-border rounded-lg overflow-hidden mb-5">
                   {[
                     { label: "Role", value: <RoleBadge role={getPrimaryRole(selectedUser)} /> },
-                    { label: "Level", value: `Lv.${Math.floor(selectedUser.reputation_points / 50)}` },
+                    { label: "Level", value: `Lv.${selectedUser.level ?? Math.floor(selectedUser.reputation_points / 50)}` },
                     {
                       label: "Reputasi",
                       value: `${selectedUser.reputation_points.toLocaleString("id-ID")} poin`,
@@ -338,21 +354,27 @@ export default function UserTable({
                     Shadow Ban
                   </button>
                   <button
-                    onClick={() => handleToggleBan(selectedUser)}
-                    className="flex-1 py-2 rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm font-medium hover:bg-red-100 transition-colors"
+                    onClick={() => handleWarn(selectedUser)}
+                    className="flex-1 py-2 rounded-lg bg-amber-50 border border-amber-200 text-amber-600 text-sm font-medium hover:bg-amber-100 transition-colors flex items-center justify-center gap-1.5"
                   >
-                    {getPrimaryRole(selectedUser) === "banned" ? "Unban" : "Ban"}
+                    <AlertTriangle size={14} />
+                    Peringatkan
                   </button>
+                  {isAdmin && (
+                    <button
+                      onClick={() => handleToggleBan(selectedUser)}
+                      className="flex-1 py-2 rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm font-medium hover:bg-red-100 transition-colors"
+                    >
+                      {getPrimaryRole(selectedUser) === "banned" ? "Unban" : "Ban"}
+                    </button>
+                  )}
                   <button
                     onClick={onCloseDetail}
-                    className="flex-1 py-2 rounded-lg bg-sidebar-accent border border-border text-muted-foreground text-sm font-medium hover:text-card-foreground transition-colors"
+                    className="py-2 px-3 rounded-lg bg-sidebar-accent border border-border text-muted-foreground text-sm font-medium hover:text-card-foreground transition-colors"
                   >
                     Tutup
                   </button>
                 </div>
-                <p className="text-xs text-muted-foreground/50 mt-2 text-center">
-                  Moderator: gunakan Shadow Ban. Ban hanya untuk admin.
-                </p>
               </>
             )}
           </Dialog.Content>

@@ -5,6 +5,7 @@ import type { Post } from "@/types/post";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useToggleBookmark } from "@/hooks/use-toggle-bookmark";
+import { useToggleLike } from "@/hooks/use-toggle-like";
 import { useToggleVote } from "@/hooks/use-toggle-vote";
 import { formatDistanceToNow } from "date-fns";
 import { id as localeId } from "date-fns/locale/id";
@@ -14,6 +15,7 @@ import {
   Eye,
   ChevronUp,
   ChevronDown,
+  Heart,
 } from "lucide-react";
 import UserHoverCard from "@/components/ui/UserHoverCard";
 import PostMenu from "@/components/ui/PostMenu";
@@ -53,12 +55,14 @@ export default function PostCard({ post }: Props) {
   } = post;
 
   const [bookmarked, setBookmarked] = useState(post.is_bookmarked ?? false);
+  const [liked, setLiked] = useState(post.user_liked ?? false);
   const [voteType, setVoteType] = useState<"upvote" | "downvote" | null>(
     post.user_vote as "upvote" | "downvote" | null,
   );
   const [voteScore, setVoteScore] = useState(post.vote_score);
 
   const toggleBookmark = useToggleBookmark();
+  const toggleLike = useToggleLike();
   const toggleVote = useToggleVote();
 
   const handleBookmark = async (e: React.MouseEvent) => {
@@ -78,6 +82,18 @@ export default function PostCard({ post }: Props) {
     } catch (err) {
       console.error("Bookmark gagal:", err);
       setBookmarked(previousState);
+    }
+  };
+
+  const handleLike = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setLiked(!liked);
+    try {
+      const result = await toggleLike.mutateAsync(id);
+      setLiked(result.liked);
+    } catch {
+      setLiked(!liked);
     }
   };
 
@@ -110,7 +126,7 @@ export default function PostCard({ post }: Props) {
   const excerpt =
     body?.slice(0, 180) + (body && body.length > 180 ? "..." : "");
   const rep = user?.reputation_points ?? 0;
-  const lvl = Math.floor(rep / 50);
+  const lvl = user?.level ?? Math.floor(rep / 50);
 
   return (
     <div className="block group">
@@ -236,6 +252,22 @@ export default function PostCard({ post }: Props) {
               </div>
 
               <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                <button
+                  type="button"
+                  onClick={handleLike}
+                  disabled={toggleLike.isPending}
+                  className={`flex items-center gap-1 transition-colors ${
+                    liked
+                      ? "text-red-500"
+                      : "text-muted-foreground hover:text-red-500"
+                  }`}
+                >
+                  <Heart
+                    size={14}
+                    strokeWidth={2}
+                    fill={liked ? "currentColor" : "none"}
+                  />
+                </button>
                 <button
                   type="button"
                   onClick={handleBookmark}

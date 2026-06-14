@@ -6,7 +6,7 @@ import { api } from "@/lib/api";
 import { useUser } from "@/hooks/use-auth";
 import { useProfile } from "@/hooks/use-profile";
 import type { ApiResponse } from "@/types/api";
-import type { User, UserWithLevel } from "@/types/user";
+import type { User } from "@/types/user";
 import type { Post } from "@/types/post";
 
 export const TABS = [
@@ -33,13 +33,13 @@ export function useProfilePage(username?: string) {
 
   const targetUsername = username || profileUser?.username;
 
-  const profileQuery = useQuery<UserWithLevel>({
+  const profileQuery = useQuery<User>({
     queryKey: ["profile-by-username", targetUsername],
     queryFn: async () => {
       const { data } = await api.get<ApiResponse<User>>(
         `/users/by-username/${targetUsername}`,
       );
-      return data.data as UserWithLevel;
+      return data.data as User;
     },
     enabled: !!targetUsername,
   });
@@ -136,7 +136,7 @@ export function useProfilePage(username?: string) {
         posts_count: 0,
         is_following: false,
         is_banned: false,
-      } as UserWithLevel),
+      } as User),
 
     activeTab,
     setActiveTab,

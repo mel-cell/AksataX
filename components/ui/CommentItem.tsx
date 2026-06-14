@@ -8,6 +8,7 @@ import {
   ChevronRight,
   ChevronUp,
   ChevronDown,
+  Heart,
   Loader2,
   Flag,
   EyeOff,
@@ -99,6 +100,7 @@ export function CommentItem({
     comment.user_vote as "upvote" | "downvote" | null,
   );
   const [voteScore, setVoteScore] = useState(comment.vote_score ?? 0);
+  const [liked, setLiked] = useState(comment.user_liked ?? false);
   const votePendingRef = useRef(false);
 
   useEffect(() => {
@@ -145,6 +147,16 @@ export function CommentItem({
       // ignore
     }
     votePendingRef.current = false;
+  };
+
+  const handleLike = async () => {
+    setLiked(!liked);
+    try {
+      const result = await likeMutation.mutateAsync({ id: comment.id, postId });
+      setLiked(result.liked);
+    } catch {
+      setLiked(!liked);
+    }
   };
 
   const updateMutation = useMutation({
@@ -367,6 +379,18 @@ export function CommentItem({
                     aria-label="Downvote"
                   >
                     <ChevronDown size={14} />
+                  </button>
+                  <button
+                    onClick={handleLike}
+                    disabled={likeMutation.isPending}
+                    className={`w-7 h-7 rounded-md border flex items-center justify-center transition-colors ${
+                      liked
+                        ? "bg-red-50 text-red-500 border-red-300"
+                        : "bg-card text-muted-foreground border-border hover:bg-red-50 hover:text-red-500 hover:border-red-300"
+                    }`}
+                    aria-label="Like"
+                  >
+                    <Heart size={13} fill={liked ? "currentColor" : "none"} />
                   </button>
                   <span className="w-px h-4 bg-border mx-0.5" />
                 </>
