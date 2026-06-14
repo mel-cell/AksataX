@@ -8,7 +8,13 @@ import { useToggleBookmark } from "@/hooks/use-toggle-bookmark";
 import { useToggleVote } from "@/hooks/use-toggle-vote";
 import { formatDistanceToNow } from "date-fns";
 import { id as localeId } from "date-fns/locale/id";
-import { Bookmark, MessageCircle, Eye, ChevronUp, ChevronDown } from "lucide-react";
+import {
+  Bookmark,
+  MessageCircle,
+  Eye,
+  ChevronUp,
+  ChevronDown,
+} from "lucide-react";
 import UserHoverCard from "@/components/ui/UserHoverCard";
 import PostMenu from "@/components/ui/PostMenu";
 
@@ -121,30 +127,30 @@ export default function PostCard({ post }: Props) {
               }`}
               aria-label="Upvote"
             >
-                                    <ChevronUp size={14} />
-                                </button>
-                                <span
-                                    className={`text-xs font-semibold tabular-nums ${
-                                        voteType === "upvote"
-                                            ? "text-green-600"
-                                            : voteType === "downvote"
-                                              ? "text-red-500"
-                                              : "text-card-foreground"
-                                    }`}
-                                >
-                                    {voteScore}
-                                </span>
-                                <button
-                                    onClick={(e) => handleVote(e, "downvote")}
-                                    disabled={toggleVote.isPending}
-                                    className={`w-7 h-7 rounded-md border flex items-center justify-center transition-colors text-xs ${
-                                        voteType === "downvote"
-                                            ? "bg-red-50 text-red-500 border-red-300"
-                                            : "bg-card text-muted-foreground border-border hover:bg-red-50 hover:text-red-500 hover:border-red-300"
-                                    }`}
-                                    aria-label="Downvote"
-                                >
-                                    <ChevronDown size={14} />
+              <ChevronUp size={14} />
+            </button>
+            <span
+              className={`text-xs font-semibold tabular-nums ${
+                voteType === "upvote"
+                  ? "text-green-600"
+                  : voteType === "downvote"
+                    ? "text-red-500"
+                    : "text-card-foreground"
+              }`}
+            >
+              {voteScore}
+            </span>
+            <button
+              onClick={(e) => handleVote(e, "downvote")}
+              disabled={toggleVote.isPending}
+              className={`w-7 h-7 rounded-md border flex items-center justify-center transition-colors text-xs ${
+                voteType === "downvote"
+                  ? "bg-red-50 text-red-500 border-red-300"
+                  : "bg-card text-muted-foreground border-border hover:bg-red-50 hover:text-red-500 hover:border-red-300"
+              }`}
+              aria-label="Downvote"
+            >
+              <ChevronDown size={14} />
             </button>
           </div>
 
@@ -178,7 +184,12 @@ export default function PostCard({ post }: Props) {
                     locale: localeId as any,
                   })}
                 </span>
-                <PostMenu postId={id} postTitle={title} authorId={user.id} authorUsername={authorName} />
+                <PostMenu
+                  postId={id}
+                  postTitle={title}
+                  authorId={user.id}
+                  authorUsername={authorName}
+                />
               </div>
             </div>
 

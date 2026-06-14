@@ -71,6 +71,14 @@ export default function ProfilePage() {
 
   const level = Math.floor(profile.reputation_points / 50);
 
+  const avatarUrl = profile.avatar_url
+    ? profile.avatar_url.startsWith("http")
+      ? profile.avatar_url
+      : `https://api.melvin.my.id${profile.avatar_url}`
+    : "";
+    
+  console.log("AVATAR URL:", avatarUrl);
+
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 py-8">
@@ -78,7 +86,7 @@ export default function ProfilePage() {
           <div className="flex items-start justify-between mb-4">
             <Avatar className="w-20 h-20 ring-4 ring-muted">
               <AvatarImage
-                src={profile.avatar_url ?? ""}
+                src={avatarUrl}
                 alt={profile.username}
               />
               <AvatarFallback className="text-2xl">
@@ -134,7 +142,7 @@ export default function ProfilePage() {
               ))}
             </div>
           )}
-  
+
           <div className="flex items-center gap-6 pt-3 border-t border-border">
             <div className="text-center">
               <p className="text-base font-bold text-card-foreground">
@@ -170,10 +178,9 @@ export default function ProfilePage() {
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key as TabKey)}
                 className={`flex-1 py-3 text-sm font-medium transition-colors relative
-                  ${
-                    activeTab === tab.key
-                      ? "text-primary"
-                      : "text-muted-foreground hover:text-card-foreground"
+                  ${activeTab === tab.key
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-card-foreground"
                   }`}
               >
                 {tab.label}
